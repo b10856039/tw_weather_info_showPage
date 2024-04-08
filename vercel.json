@@ -1,0 +1,12 @@
+{
+    "build": {
+      "env": {
+        "VUE_APP_API_URL": "https://weather-api-rouge-eight.vercel.app/api/v1"
+      },
+      "command": "npm run build",
+      "output": "dist"
+    },
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
+}
