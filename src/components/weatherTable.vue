@@ -102,16 +102,16 @@
                     let url = ''
                     if (weatherInfo) {
                         if (hours >= 6 && hours < 18) {
-                            url = `/src/assets/icons/weather/${weatherInfo.icon_day_url}`
+                            url = `/public/image/icons/weather/${weatherInfo.icon_day_url}`
                         } else {
-                            url = `/src/assets/icons/weather/${weatherInfo.icon_night_url}`
+                            url = `/public/image/icons/weather/${weatherInfo.icon_night_url}`
                         }
                     }
 
                     return url
                 } catch (error) {
                     console.error('Error loading icon:', error);
-                    return '/src/assets/icons/weather/default.svg'
+                    return '/public/image/icons/weather/default.svg'
                 }
                 
             }    
