@@ -1,0 +1,25 @@
+
+.page-container{
+    display: flex;
+    justify-content: center;
+
+    button,small{
+        margin:5px;
+    }
+    button{
+        font-size: 14px;
+        padding: 5px;
+        background-color: #EBEBEB;
+        border: 1px solid #e0e0e0;
+        font-weight: bold;
+        border-radius: 5px;
+
+        &:hover{
+            background-color: rgba(21, 150, 236);
+        }
+    }
+
+    .ishover{
+        background-color: rgba(21, 150, 236);
+    }
+}

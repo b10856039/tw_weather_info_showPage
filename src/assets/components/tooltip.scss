@@ -1,0 +1,53 @@
+.toolTip-container {
+    position: relative;
+    display: inline-block;  
+    cursor: pointer;   
+  }
+  
+  .toolTip {
+    z-index: 3;
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    width: 150px;
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+    text-align: center;
+    overflow: hidden; /* 當內容過多時，顯示省略號 */
+
+    @media screen and (max-width: 768px) {
+      font-size: 0.75em;
+      width: 200px;
+    }
+
+    @media screen and (max-width: 576px) {
+      font-size: 0.5em;
+      width: 150px;
+    }
+
+    @media screen and (max-width: 425px) {
+      font-size: 0.25em;
+      width: 100px;
+    }
+  }
+  
+  .arrow {
+    content: " ";
+    position: absolute;
+    border-width: 5px;
+    border-style: solid;
+  }
+  
+  .toolTip-container:hover .toolTip {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .toolTip-container:hover .toolTip .arrow {
+    display: block;
+  }

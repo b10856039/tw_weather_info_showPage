@@ -1,0 +1,88 @@
+$primary-color: #187ac8;
+$secondary-color: #183ec8;
+$shadow-color: rgba(0, 0, 0, 0.8);
+$hover-shadow-color: rgba(107, 163, 246, 0.8);
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: $primary-color;
+  box-shadow: 0px 2px 5px $shadow-color;
+  z-index: 99;
+
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 25px; // 調整上下左右的內邊距
+  }
+
+  .nav-title {
+    a {
+      font-size: 1.5em;
+      color: #fff;
+      text-shadow: $shadow-color 0.1em 0.1em 0.2em;
+      text-decoration: none;
+    }
+  }
+
+  .nav-router {
+    display: flex;
+    a {
+      padding: 20px 10px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease; // 添加過渡效果
+      font-size: 1em;
+      font-weight:bold;
+      color: #fff;
+      text-decoration: none;
+
+      &.router-link-active,
+      &:hover {
+        background-color: $secondary-color;
+        box-shadow: inset 0 0 5px $hover-shadow-color;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.75em;
+  }
+
+  @media screen and (max-width: 576px) {
+    font-size: 0.7em;
+  }
+
+  @media screen and (max-width: 425px) {
+    font-size: 0.65em;
+    .visible-br {
+      display: block;
+    }
+  }
+}
+
+.viewer {
+  padding: 5em 0;
+  margin: 0;
+  min-height: calc(100% - 50px);
+  background-image: url('@/assets/background.svg');
+  background-size: cover;
+}
+
+.footer {
+  text-align: center;
+  background-color: #5c9cd0;
+  padding: 1em 0;
+  color: #fff;
+  height: auto; /*設定footer本身高度*/
+
+  .href_github {
+    text-decoration: none;
+    color: #000000;
+  }
+}
+
+.visible-br {
+  display: none;
+}

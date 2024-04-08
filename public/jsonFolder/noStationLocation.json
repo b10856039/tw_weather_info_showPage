@@ -1,0 +1,32 @@
+{
+    "location":[
+        {"city":"基隆市","town":[{"originTown":"信義區","replaceTown":"仁愛區"}]},
+        {"city":"新北市","town":[{"originTown":"泰山區","replaceTown":"新莊區"}]},
+        {"city":"臺北市","town":[{"originTown":"中山區","replaceTown":"松山區"},
+                                {"originTown":"萬華區","replaceTown":"中正區"},
+                                {"originTown":"大同區","replaceTown":"松山區"}
+                                ]},
+        {"city":"新竹縣","town":[{"originTown":"芎林鄉","replaceTown":"竹東鎮"},
+                                {"originTown":"北埔鄉","replaceTown":"峨眉鄉"}
+                                ]},
+        {"city":"臺中市","town":[{"originTown":"南區","replaceTown":"北區"},
+                                {"originTown":"東區","replaceTown":"北區"},
+                                {"originTown":"中區","replaceTown":"北區"},
+                                {"originTown":"西區","replaceTown":"北區"},
+                                {"originTown":"大雅區","replaceTown":"西屯區"}
+                                ]},
+        {"city":"彰化縣","town":[{"originTown":"田尾鄉","replaceTown":"永靖鄉"},
+                                {"originTown":"北斗鎮","replaceTown":"溪州鄉"}
+                                ]},
+        {"city":"台南市","town":[{"originTown":"東區","replaceTown":"北區"}]},
+        {"city":"高雄市","town":[{"originTown":"那瑪夏區","replaceTown":"桃源區"},
+                                {"originTown":"鳥松區","replaceTown":"鳳山區"},
+                                {"originTown":"前金區","replaceTown":"前鎮區"},
+                                {"originTown":"鹽埕區","replaceTown":"前鎮區"}
+                                ]},
+        {"city":"連江縣","town":[{"originTown":"北竿鄉","replaceTown":"南竿鄉"}]},
+        {"city":"澎湖縣","town":[{"originTown":"湖西鄉","replaceTown":"馬公市"},
+                                {"originTown":"七美鄉","replaceTown":"望安鄉"}
+                                ]}
+    ]
+}

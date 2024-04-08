@@ -1,0 +1,137 @@
+.container {
+    padding: 10px 20px;
+}
+
+.search_container {
+    display: flex;
+    align-items: center; // 垂直置中
+    justify-content: center; // 水平置中
+    width: 100%;
+    margin-bottom: 10px;
+
+    input {
+        margin: 20px 0;
+        padding: 10px 30px;
+        outline: none;
+        border: 1px solid black;
+        border-radius: 15px;
+        height: 100%; // 讓輸入框高度與父容器相匹配
+        width: 50%;
+        font-size: 20px;
+    }
+
+    .svg-inline--fa {
+        margin-right: -25px;
+        z-index: 2;
+        width: auto;
+    }
+
+    .circleQuestionIcon {
+        margin: 5px;
+        border: 0;
+        background: none;
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
+
+.region_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+    grid-gap: 30px; /* 列之間的間距 */
+    justify-content: center; /* 水平居中 */
+
+    .select_block {
+        padding: 10px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+
+        button {
+            margin: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 1.5;
+            text-align: center;
+            border: 2px solid transparent;
+            padding: 6px 12px;
+            font-size: 16px;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            color: #2274f0;
+            border-color: #2274f0;
+            background-color: #fff;
+            margin-right: 5px;
+
+            &:hover {
+                background-color: #2274f0;
+                color: #fff;
+            }
+        }
+    }
+
+    .weather_block {
+        background-color: rgba(21, 150, 236, 0.7);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        width: 100%;
+        max-height: 110vh;
+        margin-bottom: 20px;
+        overflow-y: auto;
+
+        .week_block {
+            padding: 15px;
+
+            .week_title_block {
+                font-size: 2em;
+                color: #fff;
+
+                .visible-br {
+                    display: none;
+                }
+
+                @media screen and (max-width: 576px) {
+                    font-size: 1.5em;
+                    .visible-br {
+                        display: block;
+                    }
+                }
+
+                @media screen and (max-width: 425px) {
+                    font-size: 1.25em;
+                    text-align: start;
+                }
+            }
+        }
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            margin: 100px 130px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: #c8e8f9;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #255efc;            
+            background-clip: padding-box;
+            border-radius: 10px;
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.no-data {
+    display: flex;
+    font-size: 1.5em;
+    text-align: center;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}

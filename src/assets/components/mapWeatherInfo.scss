@@ -1,0 +1,25 @@
+// 共享样式
+$box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+
+.weather-info-body {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(21, 150, 236, 0.7);
+  box-shadow: $box-shadow;
+  border-radius: 20px;
+}
+
+.no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 20px;
+  box-shadow: $box-shadow;
+  border-radius: 10px;
+
+  div {
+    padding: 5px;
+  }
+}

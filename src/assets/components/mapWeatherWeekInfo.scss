@@ -1,0 +1,70 @@
+// Variables
+$primary-color: rgb(53, 29, 137);
+$container-padding: 10px;
+
+.WeekInfo_template {        
+    .WeekInfo_body {
+        padding: $container-padding;
+        background-color: rgba(21, 150, 236, 0.7);
+        border-radius: 20px;            
+        height: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+
+        .header-close button {
+            cursor: pointer;
+            outline: 0;
+            display: inline-block;
+            font-weight: bold;    
+            line-height: 1.5;
+            text-align: center;
+            background-color: transparent;
+            border: 2px solid transparent;
+            padding: 6px 12px;
+            font-size: 16px;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            color: $primary-color;
+            border-color: $primary-color; 
+            margin-right: 5px;
+
+            &:hover {
+                color: #fff;
+                background-color: $primary-color;
+                border-color: $primary-color;
+            }
+        }
+
+        .WeekInfo_header {
+            text-align: right;
+            padding: $container-padding;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+
+            .header-title {
+                font-size: 2em;
+                font-weight:bold;
+                .visible-br {
+                    display: none;
+                }
+
+                @media screen and (max-width: 576px) {
+                    font-size: 1.5em;
+                    .visible-br {
+                        display: block;
+                    }
+                }
+
+                @media screen and (max-width: 425px) {
+                    font-size: 1.25em;
+                    text-align: start;
+                }
+            }
+        }
+
+        .WeekInfo_container {
+            padding: $container-padding;
+        }
+    }
+}
