@@ -209,13 +209,18 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
 
             }
 
-            const toggleFav = (location) => {
+            const toggleFav = async (location) => {
 
                 const regionJSON = localStorage.getItem('region')
-                let region = JSON.parse(regionJSON)
+                let region =await JSON.parse(regionJSON)
 
+                if(region===null){
+                    localStorage.setItem('region',JSON.stringify([]));
+                    region = []
+                }
+                console.log(region)
                 if (fav_btn.value) {
-                    region = region.filter((item) => {
+                    region =await region.filter((item) => {
                         if (location.reqestType) {
                             return !(item.cityName === location.city);
                         } else {
@@ -223,7 +228,7 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                         }
                     });
                 } else {
-                    region.push({
+                    await region.push({
                         'cityName': location.city,
                         'townName': location.town,
                         'showCityType': location.reqestType
