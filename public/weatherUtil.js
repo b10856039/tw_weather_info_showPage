@@ -32,7 +32,7 @@ export class Location{
 export class WeatherAPI{
 
     //後端伺服器API
-    static _apiBaseUrl ='https://weather-qevd3hsao-changshengs-projects.vercel.app/api/v1' //'http://127.0.0.1:3000/api/v1'
+    static _apiBaseUrl =process.env.VUE_APP_API_URL //'http://127.0.0.1:3000/api/v1'
 
     static getAPIBaseUrl(){
         return WeatherAPI._apiBaseUrl
