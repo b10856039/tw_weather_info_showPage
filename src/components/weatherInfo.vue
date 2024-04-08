@@ -138,15 +138,15 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                     let url = ''
                     if (weatherInfo) {
                         if (hours >= 6 && hours < 18) {
-                            url = `/public/image/icons/weather/${weatherInfo.icon_day_url}`
+                            url = `/image/icons/weather/${weatherInfo.icon_day_url}`
                         } else {
-                            url = `/public/image/icons/weather/${weatherInfo.icon_night_url}`
+                            url = `/image/icons/weather/${weatherInfo.icon_night_url}`
                         }
                     }
                     return url
                 } catch (error) {
                     console.error('Error loading icon:', error);
-                    return '/public/image/icons/default.svg';
+                    return '/image/icons/default.svg';
                 }
                 
             }
@@ -158,13 +158,13 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                 ,'windspeed_icon.png','airpressure_icon.png']
                 for(const img of imgName){
                     try {
-                        let url = `/public/image/icons/${img}`
+                        let url = `/image/icons/${img}`
 
                         
                         currentDataIcon.value.push(url) 
                     } catch (error) {
                         console.error('Error loading icon:', error);
-                        return '/public/image/icons/default.svg'
+                        return '/image/icons/default.svg'
                     }
                 }
             }
