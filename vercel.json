@@ -1,12 +1,5 @@
 {
     "routes": [
-      { 
-        "src": "/assets/icons/(.*)", 
-        "status": 200, 
-        "headers": { 
-          "Content-Type": "image/svg+xml" 
-        } 
-      },
       { "src": "/(.*)", "dest": "/index.html" }
     ]
 }
