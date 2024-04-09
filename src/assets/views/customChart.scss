@@ -38,7 +38,7 @@
 .region_container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
-    grid-gap: 30px; /* 列之間的間距 */
+    grid-gap: 25px; /* 列之間的間距 */
     justify-content: center; /* 水平居中 */
 
     .select_block {
@@ -80,7 +80,7 @@
         overflow-y: auto;
 
         .week_block {
-            padding: 15px;
+            padding: 30px;
 
             .week_title_block {
                 font-size: 2em;
