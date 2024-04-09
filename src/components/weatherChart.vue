@@ -1,10 +1,9 @@
 <template>
-    <div class="weatherChart_style">
-        <div class="div-chart-toolbar">
-            <button @click="resetChart">重置大小</button>
-        </div>        
+    <div class="weatherChart_style">     
         <div class="div-chart">
-            <canvas  ref="dataChart"></canvas>
+            <div class="chart-body">
+                <canvas  ref="dataChart"></canvas>
+            </div>            
         </div>
         
         <div class="div-selector">
@@ -39,6 +38,8 @@ export default {
         const chartData = ref(null);
         const selectChart = ref('temp')
 
+        const windowWidth = ref(window.innerWidth);
+
         const chartTypes = [
             { type: 'temp', label: '一週溫度\n曲線' },
             { type: 'feelTemp', label: '一週體感溫度\n曲線' },
@@ -53,7 +54,6 @@ export default {
             Chart.register(ChartDataLabels,ChartZoomPlugin,ChartAnnotation);
             if (dataChart.value) {
                 chartInstance= new Chart(dataChart.value.getContext('2d'), chartData);
-
             }
         };
 
@@ -198,24 +198,6 @@ export default {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        zoom: {
-                            pan:{
-                                enabled:true,
-                                mode:'x',
-                            },
-                            zoom: {
-                                wheel: {
-                                    enabled: true,
-                                },
-                                pinch: {
-                                    enabled: true
-                                },
-                                mode: 'x',
-                                limits: {
-                                    x: {min: 0, max: 1},
-                                },
-                            }
-                        },
                         datalabels: {
                             anchor: 'end',
                             align: 'end',
@@ -278,13 +260,6 @@ export default {
             }
         };
 
-        //重置圖表縮放
-        const resetChart=()=>{
-            if (chartInstance) {
-                chartInstance.resetZoom(); 
-            }
-        }
-
         //監聽圖表資料
         watch([()=>props.data,()=>selectChart.value], (newData, oldData) => {
             if (newData !== oldData) {
@@ -299,6 +274,16 @@ export default {
             if (dataChart.value) {
                 chartData.value = handleChartData(props.data,selectChart.value)
                 initChart(chartData.value);
+                window.addEventListener("resize", function () {
+                    windowWidth.value = window.innerWidth;
+                    const chartBody = document.querySelector('.chart-body')
+
+                    if(windowWidth.value<768){                        
+                        chartBody.style.width = '600px'
+                    }else{
+                        chartBody.style.width = 'auto'
+                    }
+                });
             }
         });
 
@@ -308,7 +293,6 @@ export default {
             chartTypes,
             selectTypeHandler,
             selectChart,
-            resetChart,
             chartInstance
         };
     }
