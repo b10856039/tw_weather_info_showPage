@@ -4,7 +4,7 @@
     
     <div class="WeekInfo_body">
         <div class="WeekInfo_header">
-            <div class="header-title"><span>一週天氣預報 -</span><br class="visible-br"/>{{ `${weather.location.city}${weather.location.town ? weather.location.town : ''}` }}</div>
+            <div class="header-title"><span>{{ titleText }}</span><br class="visible-br"/>{{ `${weather.location.city}${weather.location.town ? weather.location.town : ''}` }}</div>
        
         </div>
         <div class="WeekInfo_container">
@@ -44,6 +44,7 @@
                 location : null,
                 weather : null,                
             })
+            const titleText = ref('一週天氣預報 -')
 
             const fetchData = async ()=>{
                 const api = ['weatherWeek']     
@@ -54,8 +55,10 @@
             const selectAPIprocessed =async (type)=>{
                 if(type === '3Hours_Temp'){
                     selectAPIType.value = '3Hours'
+                    titleText.value = '三小時逐報(三天) -'
                 }else{
                     selectAPIType.value = 'Week'
+                    titleText.value = '一週天氣預報 -'
                 }
                 await fetchData()
             }
@@ -72,7 +75,8 @@
             return{
                 weather,
                 selectAPIprocessed,
-                selectAPIType
+                selectAPIType,
+                titleText
             }
         },
         
