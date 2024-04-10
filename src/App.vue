@@ -8,11 +8,9 @@
       <nav class = 'nav-title'>
         <RouterLink to="/">臺灣氣象查詢</RouterLink>
       </nav>
-      <nav class = 'nav-router'>
-        
+      <nav class = 'nav-router'>        
         <RouterLink  to="/">天氣<br class="visible-br"/>地圖</RouterLink>
-        <RouterLink to="/customChart">個人<br class="visible-br"/>氣象</RouterLink>
-             
+        <RouterLink to="/customChart">個人<br class="visible-br"/>氣象</RouterLink>             
       </nav>
     </div>
   </header>

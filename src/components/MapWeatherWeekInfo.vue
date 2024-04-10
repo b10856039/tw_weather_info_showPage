@@ -8,8 +8,8 @@
        
         </div>
         <div class="WeekInfo_container">
-            <weatherChart class="weatherChart_style" :data="weather"/>            
-            <weatherTable class="weatherTable_style" :data="weather"/>
+            <weatherChart class="weatherChart_style" :data="weather" @update-weatherData="selectAPIprocessed"/>            
+            <weatherTable class="weatherTable_style" :data="weather" :perType ="selectAPIType"/>
         </div>   
     </div>
   </div>
@@ -39,28 +39,40 @@
             // chartData = 圖表資料
 
             const propsData = toRef(props, 'data');
-            const selectChartType = ref('temp');
+            const selectAPIType = toRef('Week')
             const weather = reactive({
                 location : null,
-                weather : null
+                weather : null,                
             })
 
-            
+            const fetchData = async ()=>{
+                const api = ['weatherWeek']     
+                const resWeatherWeek = await WeatherAPI.fetchWeatherData(weather.location,api[0],selectAPIType.value)
+                weather.weather = resWeatherWeek.data
+            }
+          
+            const selectAPIprocessed =async (type)=>{
+                if(type === '3Hours_Temp'){
+                    selectAPIType.value = '3Hours'
+                }else{
+                    selectAPIType.value = 'Week'
+                }
+                await fetchData()
+            }
+
             //監聽氣象資料更新
             watch(propsData,async (newData,oldData)=>{
-                if(newData!==oldData){
-                    weather.location = new Location(newData.cityName,newData.townName,newData.showCityType)                                 
-                    const api = ['weatherWeek']                    
-                    const resWeatherWeek = await WeatherAPI.fetchWeatherData(weather.location,api[0])
-                    weather.weather = resWeatherWeek.data
-                    console.log(weather.weather)
+                if(newData!==oldData  && newData!==null && newData!=undefined ){
+                    weather.location = new Location(newData.cityName,newData.townName,newData.showCityType)                                
+                    await fetchData()
                 }
-            })
-
+            },{immediate:true})
             
 
             return{
-                weather
+                weather,
+                selectAPIprocessed,
+                selectAPIType
             }
         },
         

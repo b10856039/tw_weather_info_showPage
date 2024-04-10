@@ -5,7 +5,7 @@
                 <thead>
                     <tr>
                         <th class="timeTitle">時間</th>
-                        <th v-for="element in weather.weather.weatherElement[0].time" :key="element.startTime" class="weekTime">
+                        <th v-for="element in weather.weather.weatherElement[1].time" :key="element.startTime" class="weekTime">
                             {{ filterYear(element.startTime) }}
                         </th>
                     </tr>                    
@@ -13,7 +13,7 @@
                 <tbody>
                     <tr v-for="data in filteredWeatherElements" :key="data.elementName">
                         <td class="weather-title">{{ data.description }}</td>
-                        <td v-for="(time, index) in data.time" :key="index" :class="data.elementName" :colspan="data.elementName === 'UVI' ? 2 : 1"> 
+                        <td v-for="(time, index) in data.time" :key="index" :class="data.elementName"> 
                             <img v-if="data.elementName==='Wx'" :src="image[index]" :title="formatValueWithUnit(time.elementValue[0])">                            
                             <span v-else>{{ formatValueWithUnit(time.elementValue[0]) }}</span>
                         </td>
@@ -23,7 +23,7 @@
         </div>  
 
         <div class="div-table-small">
-            <table id="weatherTable-small" v-for="(element,index) in weather.weather.weatherElement[0].time" :key="element.startTime" class="week-predict-weather-table-small" v-if="weather">
+            <table id="weatherTable-small" v-for="(element,index) in weather.weather.weatherElement[1].time" :key="element.startTime" class="week-predict-weather-table-small" v-if="weather">
                 <thead>
                     <tr>
                         <th>{{ filterYear(element.startTime) }}</th>
@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="data in filteredWeatherElements" :key="data" class="weather-data-element">
-                        <th v-if="!NotincludedElementNames.includes(data.elementName)">{{ data.description }}</th>
+                        <th v-if="!Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.elementName)">{{ data.description }}</th>
                         <td v-if="data.elementName==='Wx'">
                             <img :src="image[index]" :title="filterTableStartTimeData(data,element.startTime)">
                         </td>
@@ -47,7 +47,8 @@
     import {ref, toRefs, toRef, onMounted, watch,reactive,watchEffect} from 'vue'
     export default {
         props:{
-            data:Object
+            data:Object,
+            perType:String
         },
         setup(props) {
 
@@ -59,9 +60,10 @@
 
             const weather = ref(null);
             const propsData = toRef(props, 'data').value;
-            const NotincludedElementNames = ['T',"MinCI","MaxCI",'Td',"WeatherDescription"]
-            const ElementNameOrders = ['Wx','MaxT','MinT','PoP12h','MaxAT','MinAT','RH','WS','WD','UVI']
+            const NotincludedElementNames = {'Week':["MinCI","MaxCI","WeatherDescription"],'3Hours':['PoP12h',"WeatherDescription"]}
+            const ElementNameOrders = {'Week':['Wx','T','MaxT','MinT','PoP12h','MaxAT','MinAT','Td','RH','WS','WD','UVI'],'3Hours':['WX','T','AT','Td','PoP6h','RH','CI','WS','WD']}
             const image = ref([])
+            const chooseType = ref('Week')
 
             //更新天氣狀況圖示資料
             const updateImages = async () => {
@@ -121,6 +123,8 @@
                 if(newData!==oldData){
                     weather.value = propsData
                     updateImages()
+                    chooseType.value = props.perType
+                    console.log(weather.value)
                 }
             }, { deep: true, immediate: true  });
 
@@ -129,7 +133,8 @@
                 weather,
                 NotincludedElementNames,
                 ElementNameOrders,
-                image
+                image,
+                chooseType
             }
         },
         methods: {
@@ -183,9 +188,9 @@
             //處理處理時間對應的資料(大表格)
             filteredWeatherElements() {
                 return this.weather.weather.weatherElement.filter(data =>
-                    !this.NotincludedElementNames.includes(data.elementName)
+                    !Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.elementName)
                 ).sort((a,b)=>{
-                    return this.ElementNameOrders.indexOf(a.elementName)  - this.ElementNameOrders.indexOf(b.elementName) 
+                    return this.ElementNameOrders[this.chooseType].indexOf(a.elementName)  - this.ElementNameOrders[this.chooseType].indexOf(b.elementName) 
                 });
             }
         }

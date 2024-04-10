@@ -28,7 +28,7 @@ export default {
     props: {
         data: Object,
     },
-    setup(props) {  
+    setup(props,{emit}) {  
 
         // dataChart = Canvas元素
         // chartData = 圖表資料
@@ -36,14 +36,14 @@ export default {
 
         const dataChart = ref(null);
         const chartData = ref(null);
-        const selectChart = ref('temp')
+        const selectChart = ref('Week_temp')
 
         const windowWidth = ref(window.innerWidth);
 
         const chartTypes = [
-            { type: 'temp', label: '一週溫度\n曲線' },
-            { type: 'feelTemp', label: '一週體感溫度\n曲線' },
-            { type: 'humid', label: '一週相對濕度\n曲線' }
+            { type: '3Hours_Temp', label: '三小時三天逐報溫度\n曲線' },
+            { type: 'Week_temp', label: '一週溫度\n曲線' },
+            { type: 'Week_feelTemp', label: '一週體感溫度\n曲線' },            
         ];
 
         // chartInstance = 圖表物件
@@ -83,11 +83,26 @@ export default {
         }
 
         //處理時間Label
-        const formatTimeString = (timeString) => {
+        let processedDates = {};
+        const formatTimeString = (timeString, index) => {
             const dateTime = new Date(timeString);
-            const date = (dateTime.getHours() >= 6 && dateTime.getHours() < 18) ? `${(dateTime.getMonth() + 1).toString().padStart(2, '0')}/${dateTime.getDate().toString().padStart(2, '0')}` : '';
-            const period = (dateTime.getHours() >= 6 && dateTime.getHours() < 18) ? '早上' : '晚上';
-            return [period,date];
+            
+            if (selectChart.value === '3Hours_Temp') {
+                const date = `${(dateTime.getMonth() + 1).toString().padStart(2, '0')}/${dateTime.getDate().toString().padStart(2, '0')}`;
+                const time = `${dateTime.getHours().toString()}`;
+
+                // 如果該日期已經處理過，則返回time
+                if (processedDates[date]) {
+                    return [time];
+                } else {
+                    processedDates[date] = true;
+                    return ['',date];
+                }
+            } else {
+                const date = (dateTime.getHours() >= 6 && dateTime.getHours() < 18) ? `${(dateTime.getMonth() + 1).toString().padStart(2, '0')}/${dateTime.getDate().toString().padStart(2, '0')}` : '';
+                const period = (dateTime.getHours() >= 6 && dateTime.getHours() < 18) ? '早上' : '晚上';
+                return [period, date];
+            }
         };
 
 
@@ -97,8 +112,14 @@ export default {
             let newYmax = 0, newYmin = 0;
 
             //處理Data Value
-            const processData = (HighData, LowData,filter) => {                    
-                timeLabels = HighData.map(item => item.startTime).map(formatTimeString);                    
+            const processData = (HighData, LowData,filter) => {    
+                if(selectChart.value === '3Hours_Temp'){
+                    processedDates = {}
+                    timeLabels = HighData.map(item => item.dataTime).map(formatTimeString); 
+                }else{
+                    timeLabels = HighData.map(item => item.startTime).map(formatTimeString); 
+                }
+                                   
 
                 if(filter){
                     HighValues = filterTimeData(HighData,'High');
@@ -136,7 +157,7 @@ export default {
 
             let yAxisTitle = '\u2103';
 
-            if (type === 'temp') {
+            if (type === 'Week_temp') {
                 const HighData = data.weather.weatherElement.find(item => item.elementName === 'MaxT').time;
                 const LowData = data.weather.weatherElement.find(item => item.elementName === 'MinT').time;
                 processData(HighData, LowData,true);
@@ -150,7 +171,7 @@ export default {
 
                 yAxisTitle = `溫度(${yAxisTitle})`
 
-            } else if (type === 'feelTemp') {
+            } else if (type === 'Week_feelTemp') {
                 const HighData = data.weather.weatherElement.find(item => item.elementName === 'MaxAT').time;
                 const LowData = data.weather.weatherElement.find(item => item.elementName === 'MinAT').time;
                 processData(HighData, LowData,true);
@@ -163,22 +184,15 @@ export default {
                 newYmin = Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 >=0 ? Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 : 0
 
                 yAxisTitle = `體感溫度(${yAxisTitle})`
-            } else if (type === 'humid') {
-                yAxisTitle = '%'
-                const HighData = data.weather.weatherElement.find(item => item.elementName === 'RH').time;
-                processData(HighData, [],false); // LowData not used for humidity
-                dataSets = [{
-                    label: '濕度',
-                    borderColor: 'rgb(18, 180, 220)',
-                    data: HighValues,
-                    fill: false,
-                    tension: 0.4,
-                    borderWidth: 2,
-                    pointRadius: 5,
-                }];
-                newYmax = Math.max(...HighValues)+(5-(Math.max(...HighValues)%5))
-                newYmin = Math.min(...HighValues)-(Math.min(...HighValues)%5)-5 >=0 ? Math.min(...HighValues)-(Math.min(...HighValues)%5)-5 : 0
-                yAxisTitle = `相對濕度(%)`
+            } else if (type === '3Hours_Temp') {
+                yAxisTitle = '\u2103'
+                const HighData = data.weather.weatherElement.find(item => item.elementName === 'T').time;
+                const LowData = data.weather.weatherElement.find(item => item.elementName === 'AT').time;
+                processData(HighData,LowData,false); // LowData not used for humidity
+                dataSets = setDatasets('溫度', '體感溫度', 'rgb(205, 205, 205)', 'rgb(246, 180, 4)');
+                newYmax = Math.max(...HighValues)+(10-(Math.max(...HighValues)%5))
+                newYmin = Math.min(...LowValues)-(Math.min(...LowValues)%5)-5 >=0 ? Math.min(...LowValues)-(Math.min(...LowValues)%5)-5 : 0
+                yAxisTitle = `溫度(${yAxisTitle})`
             }
 
             countyName = `${data.location.city}${data.location.town ? data.location.town : ''}`;
@@ -248,6 +262,7 @@ export default {
 
         const selectTypeHandler = (type)=>{
             selectChart.value = type
+            emit('update-weatherData',selectChart.value)
         }
 
         //更新圖表
@@ -261,7 +276,7 @@ export default {
         };
 
         //監聽圖表資料
-        watch([()=>props.data,()=>selectChart.value], (newData, oldData) => {
+        watch([()=>props.data.weather], (newData, oldData) => {
             if (newData !== oldData) {
                 chartData.value = handleChartData(props.data,selectChart.value)
                 updateChart();
@@ -269,20 +284,24 @@ export default {
 
         });
 
+        const responsiveChartSize = ()=>{
+            const chartBody = document.querySelector('.chart-body')                    
+            if(windowWidth.value<768){                        
+                chartBody.style.width = '800px'            
+            }else{
+                chartBody.style.width = 'auto'
+            }
+        }
+
         //初始化圖表
         onMounted(() => {
             if (dataChart.value) {
                 chartData.value = handleChartData(props.data,selectChart.value)
                 initChart(chartData.value);
+                responsiveChartSize()
                 window.addEventListener("resize", function () {
                     windowWidth.value = window.innerWidth;
-                    const chartBody = document.querySelector('.chart-body')
-
-                    if(windowWidth.value<768){                        
-                        chartBody.style.width = '600px'
-                    }else{
-                        chartBody.style.width = 'auto'
-                    }
+                    responsiveChartSize()
                 });
             }
         });

@@ -208,6 +208,9 @@
         height: 100%;
         div[class^='current-']{
             padding: 10px;
+            div{
+                padding: 2px;
+            }
         }
 
         div div img{

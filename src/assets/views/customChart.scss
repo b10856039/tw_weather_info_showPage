@@ -1,5 +1,9 @@
 .container {
-    padding: 10px 20px;
+    padding: 20px 60px;
+
+    @media screen and (max-width : 768px) {
+        padding:10px 30px;
+    }
 }
 
 .search_container {
@@ -78,6 +82,21 @@
         max-height: 110vh;
         margin-bottom: 20px;
         overflow-y: auto;
+
+
+        :deep(.weather-info-body) {
+            background-color:transparent;
+            border-radius:0;
+            box-shadow:none;
+        }
+
+        :deep(.WeekInfo_body){
+            padding:0;
+            background-color:transparent;
+            border-radius: 0;            
+            height: auto;
+            box-shadow:none;
+        }
 
         .week_block {
             padding: 30px;

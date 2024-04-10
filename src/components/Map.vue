@@ -73,7 +73,7 @@ export default {
           const response = await import(`../../public/mapBoundsData/${cityTypeJson}.json`);
           const data = await response.default;
           taiwanCounties.value = data;
-          console.log(data)
+
           await map.value.initMapSize();
           const [countiesGroup,geometry,path] = await map.value.draw(data, showCity.value);
           await map.value.drawMapPaths(countiesGroup, geometry, path, showCity.value);

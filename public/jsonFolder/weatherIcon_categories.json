@@ -4,7 +4,7 @@
         {"type":["晴時多雲"],"icon_day_url":"02-0.svg","icon_night_url":"02-1.svg"},
         {"type":["多雲時晴"],"icon_day_url":"03-0.svg","icon_night_url":"03-1.svg"},
         {"type":["多雲"],"icon_day_url":"04-0.svg","icon_night_url":"04-1.svg"},
-        {"type":["多雲時陰"],"icon_day_url":"05-0.svg","icon_night_url":"05-1.svg"},
+        {"type":["多雲時陰","多雲有靄"],"icon_day_url":"05-0.svg","icon_night_url":"05-1.svg"},
         {"type":["陰時多雲"],"icon_day_url":"06-0.svg","icon_night_url":"06-1.svg"},
         {"type":["陰","陰天"],"icon_day_url":"07-0.svg","icon_night_url":"07-1.svg"},
         {"type":["多雲陣雨","多雲短暫雨","多雲短暫陣雨","午後短暫陣雨","短暫陣雨","多雲時晴短暫陣雨","多雲時晴短暫雨","晴時多雲短暫陣雨","晴短暫陣雨","晴短暫陣雨","短暫雨"],"icon_day_url":"08-0.svg","icon_night_url":"08-0.svg"},

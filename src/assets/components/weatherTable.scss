@@ -99,6 +99,7 @@
     display: none;
 
     .week-predict-weather-table-small {
+        width: 100%;
         margin-bottom: 2px;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
 
@@ -138,9 +139,15 @@
                     max-height: 20px;
                 }
             }
-
             .weather-data-element:nth-child(odd) {
                 clear: left;
+            }
+
+            @media screen and (max-width: 400px) {
+                flex-direction: column;
+                .weather-data-element {
+                    width: 100%;
+                }
             }
         }
     }

@@ -32,13 +32,13 @@ export class Location{
 export class WeatherAPI{
 
     //後端伺服器API
-    static _apiBaseUrl =import.meta.env.VITE_API_URL //'http://127.0.0.1:3000/api/v1'
+    static _apiBaseUrl ='import.meta.env.VITE_API_URL' //http://127.0.0.1:3000/api/v1
 
     static getAPIBaseUrl(){
         return WeatherAPI._apiBaseUrl
     }
 
-    static async fetchWeatherData(location,apiName){
+    static async fetchWeatherData(location,apiName,perType = undefined){
         const city = location.city
         let town = location.town
         const type = location.reqestType
@@ -51,26 +51,30 @@ export class WeatherAPI{
             }else{
                 apiType = 'towns'            
             }
-            apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}/${apiType}?cityName=${city}&townName=${town}`
-            console.log(apiUrl)
+
+            if(perType === undefined){
+                perType = 'Week'
+            }
+
+            apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}/${apiType}?cityName=${city}&townName=${town}&perType=${perType}`
         }else{  
             let queryType;            
             if(type){
                 queryType='CITY'
             }else{
                 queryType='TOWN'
-
-                if(location.replaceTown!=null){
-                    town = location.replaceTown
-                }
-
             }
-            apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}?cityName=${city}&townName=${town}&queryType=${queryType}`            
+
+            if(location.replaceTown!=null){
+                town = location.replaceTown
+            }
+
+            apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}?cityName=${city}&townName=${town}&queryType=${queryType}` 
+            console.log(apiUrl)           
         }
 
         const fetchData = await fetch(apiUrl)
         const response = await fetchData.json()
-        console.log(response)
         return response
     }
 }

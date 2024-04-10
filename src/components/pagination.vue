@@ -69,7 +69,8 @@
             
 
             //監聽weather資料
-            watch(() => props.data.length, () => {                
+            watch(() => props.data.length, () => {    
+                console.log(props.data)            
                 setTotalPage();
                 updateDisplayedData();
             });

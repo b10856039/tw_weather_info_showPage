@@ -1,6 +1,6 @@
 <template>
     <div class="weather-info-body" v-if="weather.location && weather.weather  && weather.weather.WeatherElement">
-        <weatherInfo :data="weather"/>
+        <weatherInfo :data="weather" @favToggle="handleFavToggleEvent"/>
     </div>
     <div class="no-data" v-if="!weather.location">
         <div>無資料</div>
@@ -23,16 +23,23 @@
         props:{
             data:Object
         },
-        setup(props){
+        emits:['fav-toggle-parent'],
+        setup(props,{emit}){
             const propsData = toRef(props, 'data');
             const weather = reactive({
                 location : null,
                 weather : null
             })
 
+
+            const handleFavToggleEvent = (location)=>{                
+                emit('fav-toggle-parent',location)
+            }
+
+
             //監聽天氣資料是否更新
-            watch(propsData, async (newData,oldData)=>{
-                if(newData!==oldData && newData!==null){                    
+            watch(propsData,(newData,oldData)=>{   
+                if(newData!==oldData && newData!==null && newData!=undefined){                    
                     weather.location = new Location(newData.cityName,newData.townName,newData.showCityType)   
                     
                     weather.location.checkhaveStation().then(() => {
@@ -43,14 +50,13 @@
                             weather.weather = resWeatherCurrent.data;
                         });
                     });
-                }else{
-                    weather = {location : null,weather : null}
                 }
-            })       
+            },{immediate:true})       
             
             return{
                 propsData,
                 weather,
+                handleFavToggleEvent
             }
         }
     }
