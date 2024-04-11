@@ -82,6 +82,8 @@
         max-height: 110vh;
         margin-bottom: 20px;
         overflow-y: auto;
+        overflow-x: visible;
+
 
 
         :deep(.weather-info-body) {
@@ -108,15 +110,21 @@
                 .visible-br {
                     display: none;
                 }
+            }
 
-                @media screen and (max-width: 576px) {
+            @media screen and (max-width: 576px) {
+                .week_title_block {
                     font-size: 1.5em;
                     .visible-br {
                         display: block;
                     }
                 }
 
-                @media screen and (max-width: 425px) {
+            }
+
+            @media screen and (max-width: 425px) {
+                padding: 15px;
+                .week_title_block {
                     font-size: 1.25em;
                     text-align: start;
                 }

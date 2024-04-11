@@ -33,6 +33,7 @@ export default {
         // dataChart = Canvas元素
         // chartData = 圖表資料
         // selectChart = 選取的圖表類型
+        // windowWidth = 網頁寬度
 
         const dataChart = ref(null);
         const chartData = ref(null);
@@ -41,7 +42,7 @@ export default {
         const windowWidth = ref(window.innerWidth);
 
         const chartTypes = [
-            { type: '3Hours_Temp', label: '三小時三天逐報溫度\n曲線' },
+            { type: '3Hours_Temp', label: '逐三小時\n預報'},
             { type: 'Week_temp', label: '一週溫度\n曲線' },
             { type: 'Week_feelTemp', label: '一週體感溫度\n曲線' },            
         ];
@@ -285,7 +286,8 @@ export default {
         });
 
         const responsiveChartSize = ()=>{
-            const chartBody = document.querySelector('.chart-body')                    
+            const chartBody = document.querySelector('.chart-body') 
+              
             if(windowWidth.value<768){                        
                 chartBody.style.width = '800px'            
             }else{

@@ -7,7 +7,7 @@
                         {{ weather.location.city ? weather.location.city : weather.location.town }}
                     </div>   
                     <div class="title-fav">
-                        <Tooltip :toolTipText="!fav_btn ? '加入到個人圖表' :'移除出個人圖表' " :position="'bottom'">
+                        <Tooltip :toolTipText="!fav_btn ? '加入到個人圖表' :'移除出個人圖表' " :position="'left'">
                             <button  @click="toggleFav(weather.location)" class="fav_btn_class"><font-awesome-icon :icon="['fas', 'star']" v-if="fav_btn"/><font-awesome-icon :icon="['far', 'star']" v-else/></button>
                         </Tooltip>
                     </div>  
@@ -103,8 +103,9 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
             // weather = 氣象資料
             // propsData = prop的資料
             // currentWxIcon = 即時氣象的天氣狀態圖示位址
+            // currentDataIcon = 各種資料的圖示
             // fav_btn = 加入個人圖表
-            // region = 地區資料
+
 
             const weather = ref(null);
             const propsData = toRef(props, 'data').value;
@@ -114,28 +115,27 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
             
             //取得天氣狀態Icon名稱
             const getIconName = async(weatherName,time)=>{ 
-                let timeState = time.split('\n')
-                if(timeState.length>1){
-                    const datePart = timeState[0].split('~')[0];
-                    const timePart = timeState[1].split('-')[0];                    
-                    timeState = `${datePart} ${timePart}`;
-                }else{
-                    timeState = timeState[0]
-                }
-                timeState = new Date(timeState)
                 
-                let hours = timeState.getHours();
+                let timeState = time.split(' ')
+                let hours = 0;
+                if(timeState.length>1){
+                    hours =parseInt(timeState[1].split('(')[0].split(':')[0]);
+                }else{
+                    return '/image/icons/default.svg'
+                }
 
                 const response = await import('../../public/jsonFolder/weatherIcon_categories.json')
-                const categories = await response.default;
-                
-                const lowercaseType = weatherName.toLowerCase();  
+                const categories = response.default;
+                const lowercaseType = weatherName.toLowerCase();
+                console.log(categories)  
+                console.log(lowercaseType)
                 //尋找天氣圖示分類
                 const weatherInfo = categories.data.find(item => item.type.includes(lowercaseType));
-
+                
                 //找到對應圖示，接上位址連結
                 try {
                     let url = ''
+                    console.log(weatherInfo)
                     if (weatherInfo) {
                         if (hours >= 6 && hours < 18) {
                             url = `/image/icons/weather/${weatherInfo.icon_day_url}`
@@ -174,12 +174,10 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                 if(useTime){
                     const foundElement = new Date(elements.DateTime)
                     // 轉換為目標格式的字串
-                    const formattedDateString = `${padZero(foundElement.getMonth()+1)}-${padZero(foundElement.getDate())} ${padZero(foundElement.getHours())}:${padZero(foundElement.getMinutes())}`;
-                    
-                    function padZero(value) {
-                        return value < 10 ? `0${value}` : value;
-                    }
-                    return formattedDateString ? formattedDateString : 'N/A-暫無資料'
+                    const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+                    const weekDay = foundElement.getDay();
+                    const formatter = new Intl.DateTimeFormat('zh', {  month: '2-digit', day: '2-digit',hour: '2-digit', minute: '2-digit', hour12: false });
+                    return `${formatter.format(foundElement)}(${dayNames[weekDay]})`;
                 }else{
                     const elementUnit = [{name:'AirTemperature',unit:'\u2103'},
                                             {name:'RelativeHumidity',unit:'%'},

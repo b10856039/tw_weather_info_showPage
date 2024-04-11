@@ -58,6 +58,7 @@ export default {
       // showCity = 判斷顯示鄉鎮or縣市地圖 ;
       // weatherData = 地區天氣資料
       // cityName = 縣市名稱 ; townName = 鄉鎮名稱;
+      // map = Map物件
 
       const taiwanCounties = ref([]);
       const showCity = ref(true);

@@ -85,7 +85,7 @@ $background-color-dark: rgb(29,162,216);
     border-radius: 10px;
     width: 100%;
     display: block;
-    max-height: 100vh;
+    height: 100vh;
 
     @media screen and (max-width:768px) {
         height: 100%;

@@ -8,7 +8,7 @@
             <button class="circleQuestionIcon">?</button>
         </Tooltip>
       </div>
-      <div class="region_container" ref="region_container" > <!-- v-if="displayedData.length>0"-->
+      <div class="region_container" ref="region_container" >
         <div  v-for="(item, index) in displayedData" :key="item.cityName + item.townName" class="weather_block"  >
             <div class="select_block">
                 <button @click="toggleBlockContent(index,'current')">目前天氣</button>
@@ -23,7 +23,7 @@
             </div>
         </div>        
       </div>
-      <!-- <div class="no-data" v-else>無資料</div> -->
+
     </div>
     <pagination v-if="region.length > 0" :data="region" @update-displayedData="updateDisplayedData" />
 </template>
@@ -49,9 +49,11 @@
             MapWeatherWeekInfo
         },
         setup(){
-            const weatherWeek_sorted = ref([])
-            const weatherCurrent_sorted = ref([])
-            const combinedData = ref([])
+
+            // region = 使用者儲存的地區資料
+            // search = 搜索欄的內容
+            // displayedData = 每頁能夠顯示的資料
+
             const region = ref([])
             const search = ref(null)
             const displayedData = ref([])

@@ -30,7 +30,7 @@ $secondary-color: #fff;
             color: $primary-color;
             border: 1px solid #dcdcdc;
             padding: 0.5rem;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: bold;
             cursor: pointer;
 
@@ -50,7 +50,7 @@ $secondary-color: #fff;
     @media screen and (max-width: 768px) {
         .div-selector {
             button {
-                font-size: 1em;
+                font-size: 0.8em;
             }
         }
     }
@@ -58,7 +58,7 @@ $secondary-color: #fff;
     @media screen and (max-width: 576px) {
         .div-selector {
             button {
-                font-size: 0.875em;
+                font-size: 0.75em;
             }
         }
     }

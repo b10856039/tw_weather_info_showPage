@@ -31,11 +31,10 @@
                 weather : null
             })
 
-
+            //上拋給CustomChart
             const handleFavToggleEvent = (location)=>{                
                 emit('fav-toggle-parent',location)
             }
-
 
             //監聽天氣資料是否更新
             watch(propsData,(newData,oldData)=>{   
@@ -47,7 +46,7 @@
                         const api = ['weatherCurrent'];
                         // 確保 replaceTown 的值已經被設置後再執行後續操作
                         WeatherAPI.fetchWeatherData(weather.location, api[0]).then(async (resWeatherCurrent) => {
-                            weather.weather = resWeatherCurrent.data;
+                            weather.weather = resWeatherCurrent.data;                            
                         });
                     });
                 }

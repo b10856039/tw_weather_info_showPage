@@ -18,7 +18,10 @@
     white-space: pre-wrap; 
     word-wrap: break-word;
     text-align: center;
-    overflow: hidden; /* 當內容過多時，顯示省略號 */
+
+    .tooltip-text{
+      overflow: hidden;
+    }
 
     @media screen and (max-width: 768px) {
       font-size: 0.75em;
@@ -40,7 +43,7 @@
     content: " ";
     position: absolute;
     border-width: 5px;
-    border-style: solid;
+    border-style: solid ;
   }
   
   .toolTip-container:hover .toolTip {

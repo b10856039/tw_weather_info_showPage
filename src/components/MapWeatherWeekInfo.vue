@@ -37,6 +37,7 @@
             // selectChartType = 選擇顯示的圖表資料
             // weather = 氣象資料
             // chartData = 圖表資料
+            // titleText = 標題
 
             const propsData = toRef(props, 'data');
             const selectAPIType = toRef('Week')
@@ -50,12 +51,13 @@
                 const api = ['weatherWeek']     
                 const resWeatherWeek = await WeatherAPI.fetchWeatherData(weather.location,api[0],selectAPIType.value)
                 weather.weather = resWeatherWeek.data
+                console.log(weather.weather)
             }
           
             const selectAPIprocessed =async (type)=>{
                 if(type === '3Hours_Temp'){
                     selectAPIType.value = '3Hours'
-                    titleText.value = '三小時逐報(三天) -'
+                    titleText.value = '逐三小時預報(三天) -'
                 }else{
                     selectAPIType.value = 'Week'
                     titleText.value = '一週天氣預報 -'
