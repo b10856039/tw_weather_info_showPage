@@ -3,7 +3,7 @@
         <slot></slot>
         <div v-if="isToolTipVisible" :style="tooltipStyle.style" class="toolTip">
             <div :style="tooltipStyle.arrowStyle" class="arrow"></div>
-            {{ toolTipText }}
+            <span class="tooltip-text">{{ toolTipText }}</span>
         </div>
     </div>
 </template>
