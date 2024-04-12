@@ -16,35 +16,180 @@ header {
     padding: 0 25px; // 調整上下左右的內邊距
   }
 
-  .nav-title {
+  .nav-title {    
     a {
       font-size: 1.5em;
       color: #fff;
       text-shadow: $shadow-color 0.1em 0.1em 0.2em;
       text-decoration: none;
+      transition: background-color .2s linear, border-color .1s linear;
+    }
+    .Nav-bar{
+      display: none;
     }
   }
 
   .nav-router {
-    display: flex;
-    a {
-      padding: 20px 10px;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease; // 添加過渡效果
-      font-size: 1em;
-      font-weight:bold;
-      color: #fff;
-      text-decoration: none;
+    padding: 0 15px;    
+      
 
-      &.router-link-active,
-      &:hover {
-        background-color: $secondary-color;
-        box-shadow: inset 0 0 5px $hover-shadow-color;
+    ul{
+      list-style-type: none;   
+      padding: 0;     
+      margin: 0;
+      li {
+        display: inline-block;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; // 添加過渡效果
+        height: 100%;
+        a{          
+          font-size: 1em;
+          font-weight: bold;
+          color: #fff;
+          text-decoration: none;
+          width: 100%; // 确保宽度填满 li
+          height: 100%;
+          padding: 15px;
+          border-left: 1px solid rgba(255, 255, 255, .4);
+        }
+        .website-setting{
+          color: #fff;
+          cursor: pointer;
+          height: 100%;
+          padding: 15px;
+          border-left: 1px solid rgba(255, 255, 255, .4);
+        }
+  
+        .hover-el:hover,
+        .website-setting:hover {
+          background-color: $secondary-color;
+          box-shadow: inset 0 0 5px $hover-shadow-color;
+        }
       }
     }
   }
 
   @media screen and (max-width: 768px) {
     font-size: 0.75em;
+
+    .wrapper{
+      padding: 10px 25px;
+      flex-direction: column;
+      justify-content:center;
+      align-items:start;
+    }
+
+    .nav-title{       
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #fff;
+
+      .Nav-bar{
+        display: block;
+      }
+    }
+
+    .nav-router{
+      display: none ; 
+      width: 100%;
+      padding: 0;
+      ul li{
+        display: block;
+        a{ 
+          display: block;
+          width: auto; 
+          height: auto;
+          border-bottom: 1px solid rgba(255, 255, 255, .4);
+          border-left: none;
+        }
+        .website-setting{
+          border-bottom: 1px solid rgba(255, 255, 255, .4);
+          border-left: none;
+        }
+
+        .UnitWrap-small{
+          display: none;
+          background-color: #fff;          
+          list-style: none;
+          li{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgb(120, 120, 120);
+            padding: 0 25px;
+            span{
+              font-weight: bold;  
+              color:#187ac8;     
+            }
+
+            a{
+              padding-left: 5px;
+              position: relative;
+              .switch-unit-ui{
+                width: 100%;
+                input[class^='Unitcheckbox-']{
+                  width: 100%;
+                  position:absolute;
+                  opacity:0;      
+        
+                  &:checked + label .btn-box {
+                    background-color: #8f8;
+                  }
+                  &:checked + label .btn-box .btn {
+                    margin-left: 50px;
+                  }
+                }    
+        
+                label{
+                  .btn-box {
+                    display:inline-block;
+                    vertical-align:middle;
+                    width: 70px;
+                    height: 20px;
+                    border-radius:100px;
+                    background-color: #ccc;
+                    box-shadow: 0px 3px 0px rgba(0,0,0,.13) inset;
+                    .btn {
+                      display:inline-block;
+                      width: 20px;
+                      height: 20px;
+                      border-radius:50%;
+                      background-color: #fff;
+                      margin-left: 0;
+                      transition: .5s;
+                      box-shadow:1px 2px 5px rgba(0,0,0,.3);
+                    }
+                  }
+                }
+        
+                .unit-type-text{
+                  position: absolute;
+                  right: 25%;                  
+                  left: auto;
+                  pointer-events: none;
+                }
+                .unit-type-text-active{
+                  left:20%;
+                  right: auto;
+                }
+        
+              }
+            }
+          }
+
+        } 
+
+        .wrap-enter-small-active{
+          display: block;
+        }
+
+      }
+    }
+
+    .nav-router-active{
+      display: block;
+    }
+
   }
 
   @media screen and (max-width: 576px) {
@@ -60,11 +205,105 @@ header {
 }
 
 .viewer {
-  padding: 1em 0;
   margin: 0;
   min-height: calc(100% - 150px);
   background-image: url('/image/background.svg');
   background-size: cover;
+  position: relative;  
+
+  .UnitWrap {
+    position: absolute;
+    right: 0; 
+    width: 40%;
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+    max-height: 0; 
+    display: none; 
+    
+  
+    .checkUnit_block{
+      background-color: #104e81;
+      display: flex;
+      justify-content: center;      
+      align-items: center;
+      width: 100%;
+      color: #fff;
+      padding: 5px;
+  
+      &:nth-child(odd){
+        border-right: 1px solid #fff;
+      }
+  
+      a{
+        padding-left: 5px;
+        position: relative;
+        .switch-unit-ui{
+          width: 100%;
+          input[class^='Unitcheckbox-']{
+            width: 100%;
+            position:absolute;
+            opacity:0;
+  
+  
+            &:checked + label .btn-box {
+              background-color: #8f8;
+            }
+            &:checked + label .btn-box .btn {
+              margin-left: 50px;
+            }
+          }
+  
+  
+  
+          label{
+            .btn-box {
+              display:inline-block;
+              vertical-align:middle;
+              width: 70px;
+              height: 20px;
+              border-radius:100px;
+              background-color: #ccc;
+              box-shadow: 0px 3px 0px rgba(0,0,0,.13) inset;
+              .btn {
+                display:inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius:50%;
+                background-color: #fff;
+                margin-left: 0;
+                transition: .5s;
+                box-shadow:1px 2px 5px rgba(0,0,0,.3);
+              }
+            }
+          }
+  
+          .unit-type-text{
+            position: absolute;
+            right: 15%;
+            left: auto;
+            pointer-events: none;
+          }
+          .unit-type-text-active{
+            left:15%;
+            right: auto;
+          }
+  
+        }
+      }
+    }
+  }   
+  .Router-view-container{
+    padding: 1.5em 0;
+  }
+
+  .wrap-enter-active {
+    max-height: 500px; /* 或根据实际内容高度调整 */
+    display: flex;  
+    justify-content: right;
+    padding: 0 30px;
+    overflow: visible;
+  }  
+  
 }
 
 .footer {

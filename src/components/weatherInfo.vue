@@ -87,7 +87,7 @@
 
 
 <script>
-    import {ref, toRefs, toRef, onMounted, watch,reactive } from 'vue'
+    import {ref, toRefs, toRef, onMounted, watch,inject } from 'vue'
     import Tooltip from '../components/toolTip.vue';
 import { faV } from '@fortawesome/free-solid-svg-icons';
     export default{
@@ -112,6 +112,8 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
             const currentWxIcon = ref('')
             const currentDataIcon = ref([])
             const fav_btn = ref(false)
+          
+            const checkUpdateUnit = inject('unpdateUnit')
             
             //取得天氣狀態Icon名稱
             const getIconName = async(weatherName,time)=>{ 
@@ -127,15 +129,12 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                 const response = await import('../../public/jsonFolder/weatherIcon_categories.json')
                 const categories = response.default;
                 const lowercaseType = weatherName.toLowerCase();
-                console.log(categories)  
-                console.log(lowercaseType)
                 //尋找天氣圖示分類
                 const weatherInfo = categories.data.find(item => item.type.includes(lowercaseType));
                 
                 //找到對應圖示，接上位址連結
                 try {
                     let url = ''
-                    console.log(weatherInfo)
                     if (weatherInfo) {
                         if (hours >= 6 && hours < 18) {
                             url = `/image/icons/weather/${weatherInfo.icon_day_url}`
@@ -169,6 +168,50 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                 }
             }
 
+            const UnitHandler = () => {
+                const unitDefaults = {
+                    temperature: '\u2103', //度C
+                    windSpeed: 'm/s'
+                };
+
+                const storedUnitData = localStorage.getItem('unit');
+                let unitData = storedUnitData ? JSON.parse(storedUnitData) : {};
+
+                
+                unitData = { ...unitDefaults, ...unitData };
+
+                unitData.temperature = unitData.temperature === 'celsius' ? '\u2103' : '\u2109'; 
+                unitData.windSpeed = unitData.windSpeed === 'ms' ? 'm/s' : 'km/h';
+                
+                const unitElements = [
+                    { name: 'AirTemperature', unit: unitData.temperature },
+                    { name: 'RelativeHumidity', unit: '%' },
+                    { name: 'Precipitation', unit: 'mm' },
+                    { name: 'WindSpeed', unit: unitData.windSpeed },
+                    { name: 'AirPressure', unit: 'hpa' }
+                ];
+
+                return unitElements;
+            }
+
+            const dataUnitTransfer = (data,dataUnit)=>{
+                if(Math.sign(data) < 0){
+                    return 'N/A-暫無資料'
+                }
+
+                if(dataUnit === '\u2109'){
+                    data = Math.round((data * 9 / 5 + 32))
+                }else if (dataUnit === 'km/h'){
+                    data = Math.round((data * 3.6)* 10)/10
+                }
+
+                if(dataUnit === undefined){
+                    return `${data.toString()}`
+                }                   
+                return `${data.toString()} ${dataUnit}`
+            }
+
+
             //取得與處理即時天氣資料
             const findCurrentTimeElementByName = (elements, name, useTime=undefined)=>{   
                 if(useTime){
@@ -179,11 +222,7 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                     const formatter = new Intl.DateTimeFormat('zh', {  month: '2-digit', day: '2-digit',hour: '2-digit', minute: '2-digit', hour12: false });
                     return `${formatter.format(foundElement)}(${dayNames[weekDay]})`;
                 }else{
-                    const elementUnit = [{name:'AirTemperature',unit:'\u2103'},
-                                            {name:'RelativeHumidity',unit:'%'},
-                                            {name:'Precipitation',unit:'mm'},
-                                            {name:'WindSpeed',unit:'m/s'},
-                                            {name:'AirPressure',unit:'hpa'}]
+                    const elementUnit = UnitHandler()
 
                     const foundUnit = elementUnit.filter(unit => name.includes(unit.name))[0]!=undefined ? elementUnit.filter(unit => name.includes(unit.name))[0] : '';
                     if(name.split(',').length>1){
@@ -196,11 +235,13 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                                 break
                             }
                         }
-                        foundElement = foundElement!='-99' ? foundElement.toString() : 'N/A-暫無資料'
-                        return foundElement!='N/A-暫無資料' ? (foundElement + (foundUnit!='' ? ` ${foundUnit.unit}` : '')) : 'N/A-暫無資料';
+
+                        foundElement = dataUnitTransfer(foundElement,foundUnit.unit)
+
+                        return foundElement
                     }else{
-                        let foundElement = elements[name]!='-99' ? elements[name].toString() : 'N/A-暫無資料'
-                        return foundElement!='N/A-暫無資料' ? (foundElement + (foundUnit ? ` ${foundUnit.unit}` : '')) : 'N/A-暫無資料';
+                        let foundElement = dataUnitTransfer(elements[name],foundUnit.unit)
+                        return foundElement
                     }
 
                 }
@@ -216,7 +257,6 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                     localStorage.setItem('region',JSON.stringify([]));
                     region = []
                 }
-                console.log(region)
                 if (fav_btn.value) {
                     region =await region.filter((item) => {
                         if (location.reqestType) {
@@ -236,12 +276,15 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                 // 更新 localStorage
                 localStorage.setItem('region', JSON.stringify(region));
 
-
                 emit('favToggle',location);
             }
 
+            watch(checkUpdateUnit,(newData,oldData)=>{
+                weather.value  = []
+                weather.value = propsData
+            },{ deep: true})
+
             watch([() => propsData.location,()=>propsData.weather], async (newData,oldData)=>{
-                
                 if(newData!==oldData){
                     weather.value = propsData
                     currentWxIcon.value = await getIconName(findCurrentTimeElementByName(weather.value.weather.WeatherElement, 'Weather'), findCurrentTimeElementByName(weather.value.weather.ObsTime, 'none', 'time'));
@@ -274,7 +317,7 @@ import { faV } from '@fortawesome/free-solid-svg-icons';
                     
                     return
                 }   
-            },{ deep: true, immediate: true  })       
+            },{ deep: true, immediate: true  })
             
 
             onMounted(()=>{

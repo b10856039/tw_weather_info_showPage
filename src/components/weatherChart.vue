@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watchEffect,watch } from 'vue';
+import { ref, onMounted,watch,inject } from 'vue';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import ChartZoomPlugin from 'chartjs-plugin-zoom';
@@ -38,8 +38,8 @@ export default {
         const dataChart = ref(null);
         const chartData = ref(null);
         const selectChart = ref('Week_temp')
-
         const windowWidth = ref(window.innerWidth);
+        const checkUpdateUnit = inject('unpdateUnit')
 
         const chartTypes = [
             { type: '3Hours_Temp', label: '逐三小時\n預報'},
@@ -130,6 +130,19 @@ export default {
                     LowValues = LowData.map(item => item.elementValue[0].value),'Low';
                 }
 
+                HighValues = HighValues.map((item)=>{
+                    if(yAxisTitle === '\u2109' && item!=null){
+                        item = (Math.round(Number(item) * 9 / 5 + 32)).toString()
+                    }
+                    return item
+                })
+
+                LowValues = LowValues.map((item)=>{
+                    if(yAxisTitle === '\u2109' && item!=null){
+                        item = (Math.round(Number(item) * 9 / 5 + 32)).toString()
+                    }
+                    return item
+                })
             };
 
             //設置DataSet(用於溫度與體感溫度)
@@ -158,6 +171,15 @@ export default {
 
             let yAxisTitle = '\u2103';
 
+
+            const storedUnitData = localStorage.getItem('unit');
+            let unitData = JSON.parse(storedUnitData);
+
+            if(unitData.temperature === 'fahrenheit'){
+                yAxisTitle = '\u2109'
+            }
+
+
             if (type === 'Week_temp') {
                 const HighData = data.weather.weatherElement.find(item => item.elementName === 'MaxT').time;
                 const LowData = data.weather.weatherElement.find(item => item.elementName === 'MinT').time;
@@ -183,10 +205,8 @@ export default {
 
                 newYmax = Math.max(...fitlerNullHighValues)+(5-(Math.max(...fitlerNullHighValues)%5))
                 newYmin = Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 >=0 ? Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 : 0
-
                 yAxisTitle = `體感溫度(${yAxisTitle})`
             } else if (type === '3Hours_Temp') {
-                yAxisTitle = '\u2103'
                 const HighData = data.weather.weatherElement.find(item => item.elementName === 'T').time;
                 const LowData = data.weather.weatherElement.find(item => item.elementName === 'AT').time;
                 processData(HighData,LowData,false); // LowData not used for humidity
@@ -277,13 +297,13 @@ export default {
         };
 
         //監聽圖表資料
-        watch([()=>props.data.weather], (newData, oldData) => {
+        watch([()=>props.data.weather,()=>checkUpdateUnit], (newData, oldData) => {
             if (newData !== oldData) {
                 chartData.value = handleChartData(props.data,selectChart.value)
                 updateChart();
             }
 
-        });
+        },{ deep: true});
 
         const responsiveChartSize = ()=>{
             const chartBody = document.querySelector('.chart-body') 

@@ -54,7 +54,7 @@
 </template>
 
 <script>
-    import {ref, toRefs, toRef, onMounted, watch,reactive,watchEffect} from 'vue'
+    import {ref, toRefs, toRef, onMounted, watch,inject} from 'vue'
     export default {
         props:{
             data:Object,
@@ -77,6 +77,7 @@
             const image = ref([])
             const chooseType = ref('Week')
             const tableExpandStatus =ref({})
+            const checkUpdateUnit = inject('unpdateUnit')
 
             //更新天氣狀況圖示資料
             const updateImages = async () => {
@@ -129,7 +130,12 @@
                     return '/image/icons/weather/default.svg'
                 }
                 
-            }    
+            }        
+            
+            watch(checkUpdateUnit,(newData,oldData)=>{
+                weather.value  = []
+                weather.value = propsData
+            },{ deep: true})
 
             //監聽氣象與地區資料
             watch([() => propsData.location,()=>propsData.weather],(newData, oldData) => { 
@@ -180,17 +186,31 @@
             //數值單位設置
             formatValueWithUnit(element){
                 if (element && element.value!=" ") {
-                    const value = element.value || '';
+                    let value = element.value || '';
+                    const storedUnitData = localStorage.getItem('unit');
+                    let unitData = JSON.parse(storedUnitData);
+                  
                     let measures;
                     switch(element.measures){
                         case '百分比':
                             measures = '%'
                             break
                         case '公尺/秒':
-                            measures = 'm/s'
+                            if(unitData.temperature === 'kmh'){
+                                measures = 'km/h'
+                                value = Math.round((Number(value) * 3.6)* 10)/10
+                            }else{
+                                measures = 'm/s'
+                            }
+                            
                             break
                         case '攝氏度' :
-                            measures = '°C'
+                            if(unitData.temperature === 'fahrenheit'){
+                                measures = '\u2109'
+                                value = Math.round((Number(value) * 9 / 5 + 32))
+                            }else{
+                                measures = '\u2103'
+                            }
                             break                            
                     }
                     return `${value}${measures ? measures : ''}`;
