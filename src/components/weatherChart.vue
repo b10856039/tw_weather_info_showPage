@@ -306,13 +306,11 @@ export default {
         },{ deep: true});
 
         const responsiveChartSize = ()=>{
-            const chartBody = document.querySelector('.chart-body') 
-              
-            if(windowWidth.value<768 && chartBody!==null){                        
-                chartBody.style.width = '800px'            
-            }else{
-                chartBody.style.width = 'auto'
+            const chartBody = document.querySelector('.chart-body')             
+            if(chartBody==null){
+                return
             }
+            chartBody.style.width = windowWidth.value<768 ? '800px' : 'auto'
         }
 
         //初始化圖表
