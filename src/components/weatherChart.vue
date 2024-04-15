@@ -308,7 +308,7 @@ export default {
         const responsiveChartSize = ()=>{
             const chartBody = document.querySelector('.chart-body') 
               
-            if(windowWidth.value<768){                        
+            if(windowWidth.value<768 && chartBody!==null){                        
                 chartBody.style.width = '800px'            
             }else{
                 chartBody.style.width = 'auto'

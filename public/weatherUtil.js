@@ -70,7 +70,7 @@ export class WeatherAPI{
             }
 
             apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}?cityName=${city}&townName=${town}&queryType=${queryType}` 
-            console.log(apiUrl)           
+   
         }
 
         const fetchData = await fetch(apiUrl)

@@ -51,7 +51,7 @@
                 const api = ['weatherWeek']     
                 const resWeatherWeek = await WeatherAPI.fetchWeatherData(weather.location,api[0],selectAPIType.value)
                 weather.weather = resWeatherWeek.data
-                console.log(weather.weather)
+
             }
           
             const selectAPIprocessed =async (type)=>{

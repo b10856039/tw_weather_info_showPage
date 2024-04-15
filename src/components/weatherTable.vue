@@ -143,7 +143,7 @@
                     weather.value = propsData
                     updateImages()
                     chooseType.value = props.perType
-                    console.log(weather.value)
+
                 }
             }, { deep: true, immediate: true  });
 
