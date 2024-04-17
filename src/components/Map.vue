@@ -262,11 +262,11 @@ export default {
         try {
             const response = await fetch(reverseGeocodingAPI);
             const data = await response.json();
-            this.cityName =await data.address.county; 
+            this.cityName = data.address.city; 
             await this.toggleMap(false);
             this.showCity = false;                    
             await this.generatorTownSelecter();
-            this.townName =await data.address.town;
+            this.townName = data.address.suburb;
             await this.map.search(this.showCity,this.cityName,this.townName)
         } catch (error) {
             console.error('Error fetching reverse geocoding data:', error);
