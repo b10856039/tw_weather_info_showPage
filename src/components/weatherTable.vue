@@ -39,12 +39,12 @@
                     </tr>
                 </thead>
                 <tbody v-show="tableExpandStatus[element.startTime]">
-                    <tr v-for="data in filteredWeatherElements" :key="data" class="weather-data-element">
+                    <tr v-for="data in filteredWeatherElements" :key="data" class="weather-data-element">                    
                         <th v-if="!Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.elementName)">{{ data.description }}</th>
                         <td v-if="data.elementName==='Wx'">
                             <img :src="image[index]" :title="filterTableStartTimeData(data,element.startTime)">
                             <span>{{filterTableStartTimeData(data,element.startTime)}}</span>
-                        </td>
+                        </td>                        
                         <td v-else>{{filterTableStartTimeData(data,element.startTime)}}</td>
                     </tr>
                 </tbody>
@@ -213,13 +213,19 @@
                             }
                             break                            
                     }
+
                     return `${value}${measures ? measures : ''}`;
                 }
                 return '-';
             },        
             //處理時間對應的資料(手機板表格)
             filterTableStartTimeData(data,filterTime){
-                let newData = data.time.filter((item)=>{return item.startTime === filterTime})
+                let newData = data.time.filter((item)=>{                    
+
+                    const st_Time = new Date(item.startTime ? item.startTime : item.dataTime)
+                    const fil_Time = new Date(filterTime)
+                    return st_Time.getTime() === fil_Time.getTime()
+                })
                 if(newData.length>0){
                     return this.formatValueWithUnit(newData[0].elementValue[0])
                 }                            
