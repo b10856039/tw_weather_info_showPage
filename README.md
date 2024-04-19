@@ -16,35 +16,35 @@
    
 ### 系統套件
 
-## 上線環境
-* vue 3.3.4
-* vue-router 4.2.4
-* fortawesome/fontawesome-svg-core 6.5.1,
-* fortawesome/free-brands-svg-icons 6.5.1
-* fortawesome/free-regular-svg-icons 6.5.1
-* fortawesome/free-solid-svg-icons 6.5.1
-* fortawesome/vue-fontawesome 3.0.6
-* chart.js 4.4.0
-* chartjs-plugin-datalabels 2.2.0
-* d3 7.8.5
+* 上線環境
+   * vue 3.3.4
+   * vue-router 4.2.4
+   * fortawesome/fontawesome-svg-core 6.5.1,
+   * fortawesome/free-brands-svg-icons 6.5.1
+   * fortawesome/free-regular-svg-icons 6.5.1
+   * fortawesome/free-solid-svg-icons 6.5.1
+   * fortawesome/vue-fontawesome 3.0.6
+   * chart.js 4.4.0
+   * chartjs-plugin-datalabels 2.2.0
+   * d3 7.8.5
 
-## 開發環境
- * @babel/core 7.24.4
- * @babel/preset-env 7.24.4
- * @vitejs/plugin-vue 4.3.4
- * @vitejs/plugin-vue-jsx 3.0.2
- * babel-loader 9.1.3
- * css-loader 7.0.0
- * node-sass 9.0.0
- * sass 1.69.5
- * sass-loader 13.3.3
- * style-loader 3.3.4
- * terser-webpack-plugin 5.3.10
- * vite 4.4.9
- * vue-loader 17.4.2
- * vue-template-compiler 2.7.16
- * webpack 5.91.0
- * webpack-cli 5.1.4
+* 開發環境
+    * @babel/core 7.24.4
+    * @babel/preset-env 7.24.4
+    * @vitejs/plugin-vue 4.3.4
+    * @vitejs/plugin-vue-jsx 3.0.2
+    * babel-loader 9.1.3
+    * css-loader 7.0.0
+    * node-sass 9.0.0
+    * sass 1.69.5
+    * sass-loader 13.3.3
+    * style-loader 3.3.4
+    * terser-webpack-plugin 5.3.10
+    * vite 4.4.9
+    * vue-loader 17.4.2
+    * vue-template-compiler 2.7.16
+    * webpack 5.91.0
+    * webpack-cli 5.1.4
    
 ### 雲端部署
  * 部署環境 Vercel
