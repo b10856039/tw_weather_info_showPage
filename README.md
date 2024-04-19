@@ -59,7 +59,7 @@
 4. 找到.env檔案，將內部的config進行設定。
 5. 在有index.js的路徑使用template輸入並執行
    ``` XML
-      npm run dev
+   npm run dev
    ```
    即可啟動伺服器。
 
