@@ -1,10 +1,15 @@
 # Side Project專案 臺灣氣象查詢 - 前端展示網頁
 此專案為透過Vue3.js建置前端網頁伺服器供使用者進行臺灣的氣象資訊查看。
+目前已在Vercel進行上線，可透過以下網址前往前端網頁進行使用。
+
+[臺灣氣象查詢](https://tw-weather-info-show-page.vercel.app/ "link")
 
 ## 開發規格與環境說明
 
 ### 開發環境
- * 開發環境 Visual Studio Code 1.88.1
+ * 作業系統 Window 10/11
+ * 開發工具 Visual Studio Code 1.88.1 
+ * 環境框架 Node.js 16.13.1
    
 ### 系統語言
  * Javascript ES6
@@ -43,6 +48,20 @@
    
 ### 雲端部署
  * 部署環境 Vercel
+
+## 建置流程
+1. 使用 git clone 或是 直接下載github的檔案。
+2. 在有package.json的路徑使用template輸入並執行
+   ``` XML
+    npm install
+   ```
+   下載所需套件。
+4. 找到.env檔案，將內部的config進行設定。
+5. 在有index.js的路徑使用template輸入並執行
+   ``` XML
+      npm run dev
+   ```
+   即可啟動伺服器。
 
 ## 網頁功能說明
 
