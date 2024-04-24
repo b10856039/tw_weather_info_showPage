@@ -45,6 +45,7 @@
     * vue-template-compiler 2.7.16
     * webpack 5.91.0
     * webpack-cli 5.1.4
+    * gsap 3.12.5
    
 ### 雲端部署
  * 部署環境 Vercel
