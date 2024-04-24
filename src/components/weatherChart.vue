@@ -20,8 +20,6 @@
 import { ref, onMounted,watch,inject } from 'vue';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import ChartZoomPlugin from 'chartjs-plugin-zoom';
-import ChartAnnotation from 'chartjs-plugin-annotation'
 
 
 export default {
@@ -52,7 +50,7 @@ export default {
 
         const initChart = (chartData) => {
             
-            Chart.register(ChartDataLabels,ChartZoomPlugin,ChartAnnotation);
+            Chart.register(ChartDataLabels);
             if (dataChart.value) {
                 chartInstance= new Chart(dataChart.value.getContext('2d'), chartData);
             }

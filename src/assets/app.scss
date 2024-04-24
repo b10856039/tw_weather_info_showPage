@@ -30,9 +30,8 @@ header {
   }
 
   .nav-router {
-    padding: 0 15px;    
-      
-
+    padding: 0 15px; 
+    background-color: $primary-color;
     ul{
       list-style-type: none;   
       padding: 0;     
@@ -76,6 +75,7 @@ header {
       flex-direction: column;
       justify-content:center;
       align-items:start;
+      transition: height 0.5s ease; // 添加过渡效果
     }
 
     .nav-title{       
@@ -89,10 +89,19 @@ header {
       }
     }
 
+    .settings {
+      top: 0;
+      width: 50%;
+      height: 100vh;
+      background-color: white;
+    }
+
     .nav-router{
-      display: none ; 
+      max-height:0;
       width: 100%;
       padding: 0;
+      transition: max-height 0.5s ease-out;
+
       ul li{
         display: block;
         a{ 
@@ -107,8 +116,20 @@ header {
           border-left: none;
         }
 
+        .slide-sm-unit-enter-active, .slide-sm-unit-leave-active {
+          transition: all 0.3s ease-in-out;
+          transform-origin: top;
+        }
+        
+        .slide-sm-unit-enter-from,.slide-sm-unit-leave-to{
+          transform: scaleY(0);          
+        }  
+
+        .slide-sm-unit-enter-to,.slide-sm-unit-leave-from{
+          transform: scaleY(1);
+        }
+
         .UnitWrap-small{
-          display: none;
           background-color: #fff;          
           list-style: none;
           li{
@@ -179,17 +200,13 @@ header {
 
         } 
 
-        .wrap-enter-small-active{
-          display: block;
-        }
-
       }
     }
 
     .nav-router-active{
-      display: block;
+      max-height: 800px;
+      transition: max-height 0.5s ease-in;
     }
-
   }
 
   @media screen and (max-width: 576px) {
@@ -211,14 +228,28 @@ header {
   background-size: cover;
   position: relative;  
 
+  .slide-unit-enter-active, .slide-unit-leave-active {
+    transition: all 0.3s ease-in-out;
+    transform-origin: top;
+  }
+  
+  .slide-unit-enter-from,.slide-unit-leave-to{
+    transform: scaleY(0);          
+  }  
+
+  .slide-unit-enter-to,.slide-unit-leave-from{
+    transform: scaleY(1);
+  }
+
   .UnitWrap {
     position: absolute;
     right: 0; 
     width: 40%;
-    transition: max-height 0.5s ease-in-out;
-    overflow: hidden;
-    max-height: 0; 
-    display: none; 
+    max-height: 500px;
+    display: flex;  
+    justify-content: right;
+    padding: 0 30px;
+    overflow: visible;
     
   
     .checkUnit_block{
@@ -295,15 +326,6 @@ header {
   .Router-view-container{
     padding: 1.5em 0;
   }
-
-  .wrap-enter-active {
-    max-height: 500px; /* 或根据实际内容高度调整 */
-    display: flex;  
-    justify-content: right;
-    padding: 0 30px;
-    overflow: visible;
-  }  
-  
 }
 
 .footer {

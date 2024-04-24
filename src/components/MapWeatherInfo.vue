@@ -3,8 +3,8 @@
         <weatherInfo :data="weather" @favToggle="handleFavToggleEvent"/>
     </div>
     <div class="no-data" v-if="!weather.location">
-        <div>無資料</div>
-        <div>請選取地圖</div>
+        <div><font-awesome-icon :icon="['far', 'file']" size='2xl' /></div>
+        <div>無資料，請選取地圖</div>
     </div>
 
 </template>
@@ -26,6 +26,7 @@
         emits:['fav-toggle-parent'],
         setup(props,{emit}){
             const propsData = toRef(props, 'data');
+            const loadingState = ref(false)
             const weather = reactive({
                 location : null,
                 weather : null
@@ -46,7 +47,8 @@
                         const api = ['weatherCurrent'];
                         // 確保 replaceTown 的值已經被設置後再執行後續操作
                         WeatherAPI.fetchWeatherData(weather.location, api[0]).then(async (resWeatherCurrent) => {
-                            weather.weather = resWeatherCurrent.data;                            
+                            weather.weather = await resWeatherCurrent.data;  
+                            loadingState.value = true                          
                         });
                     });
                 }
@@ -55,6 +57,7 @@
             return{
                 propsData,
                 weather,
+                loadingState,
                 handleFavToggleEvent
             }
         }

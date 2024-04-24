@@ -5,62 +5,68 @@
         <div>
           <RouterLink to="/">臺灣氣象查詢</RouterLink>
         </div>
-        <div>
-          <a href="javascript:void(0)" @click="toggleNavigation" class="Nav-bar"><font-awesome-icon :icon="['fas',showNavigationBar ? 'x' : 'bars']" /></a>
+        <div>          
+            <a href="javascript:void(0)" @click="toggleNavigation" class="Nav-bar">
+                <font-awesome-icon :icon="['fas',showNavigationBar ? 'x' : 'bars']" />
+            </a>          
         </div>
       </nav>
-      <nav class ='nav-router' :class="{'nav-router-active':showNavigationBar}">   
-        <ul>
-          <li>
-            <RouterLink  to="/" class="hover-el">天氣地圖</RouterLink>
-          </li>
-          <li>
-            <RouterLink  to="/customChart" class="hover-el">個人氣象</RouterLink>
-          </li>
-          <li>
-            <div class="website-setting hover-el" @click="toggleUnitWrap()"><font-awesome-icon :icon="['fas', 'gear']" />網站設定</div>
-            <ul class="UnitWrap-small" v-if="windowWidth < 768" :class="{'wrap-enter-small-active':showUnitWrap}">
-              <li v-for="setting in settings" :key="setting.key">
-                <span>{{ setting.label }}</span>
-                <a href="javascript:void(0)" @click="toggleSetting(setting)">
-                  <div class="switch-unit-ui">
-                    <input type="checkbox" :class="'Unitcheckbox-' + setting.key" :checked="unitData[setting.key] === Object.keys(setting.options)[1]"/>
-                    <label>
-                      <span class="btn-box">
-                        <span class="btn"></span>      
-                      </span>
-                    </label>
-                    <span class="unit-type-text" :class="{'unit-type-text-active': unitData[setting.key] === Object.keys(setting.options)[1]}">
-                      {{ setting.options[unitData[setting.key]] }}
-                    </span>
-                  </div>              
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>            
-      </nav>
+      <nav class ='nav-router' :class="{'nav-router-active':showNavigationBar}">
+          <ul>
+            <li>
+              <RouterLink  to="/" class="hover-el">天氣地圖</RouterLink>
+            </li>
+            <li>
+              <RouterLink  to="/customChart" class="hover-el">個人氣象</RouterLink>
+            </li>
+            <li>
+              <div class="website-setting hover-el" @click="toggleUnitWrap()"><font-awesome-icon :icon="['fas', 'gear']" />網站設定</div>
+              <Transition name="slide-sm-unit">
+                <ul class="UnitWrap-small" v-if="windowWidth < 768 && showUnitWrap">
+                  <li v-for="setting in settings" :key="setting.key">
+                    <span>{{ setting.label }}</span>
+                    <a href="javascript:void(0)" @click="toggleSetting(setting)">
+                      <div class="switch-unit-ui">
+                        <input type="checkbox" :class="'Unitcheckbox-' + setting.key" :checked="unitData[setting.key] === Object.keys(setting.options)[1]"/>
+                        <label>
+                          <span class="btn-box">
+                            <span class="btn"></span>      
+                          </span>
+                        </label>
+                        <span class="unit-type-text" :class="{'unit-type-text-active': unitData[setting.key] === Object.keys(setting.options)[1]}">
+                          {{ setting.options[unitData[setting.key]] }}
+                        </span>
+                      </div>              
+                    </a>
+                  </li>
+                </ul>
+              </Transition>
+            </li>
+          </ul>       
+      </nav>    
     </div>
   </header>
   <div class="viewer">
-    <div class="UnitWrap" :class="{ 'wrap-enter-active': showUnitWrap }" v-if="windowWidth >= 768">
-      <div class="checkUnit_block" v-for="setting in settings" :key="setting.key">
-        <span>{{ setting.label }}</span>
-        <a href="javascript:void(0)" @click="toggleSetting(setting)">
-          <div class="switch-unit-ui">
-            <input type="checkbox" :class="'Unitcheckbox-' + setting.key" :checked="unitData[setting.key] === Object.keys(setting.options)[1]"/>
-            <label>
-              <span class="btn-box">
-                <span class="btn"></span>      
+    <Transition name="slide-unit">
+      <div class="UnitWrap"  v-if="windowWidth >= 768 && showUnitWrap">
+        <div class="checkUnit_block" v-for="setting in settings" :key="setting.key">
+          <span>{{ setting.label }}</span>
+          <a href="javascript:void(0)" @click="toggleSetting(setting)">
+            <div class="switch-unit-ui">
+              <input type="checkbox" :class="'Unitcheckbox-' + setting.key" :checked="unitData[setting.key] === Object.keys(setting.options)[1]"/>
+              <label>
+                <span class="btn-box">
+                  <span class="btn"></span>      
+                </span>
+              </label>
+              <span class="unit-type-text" :class="{'unit-type-text-active': unitData[setting.key] === Object.keys(setting.options)[1]}">
+                {{ setting.options[unitData[setting.key]] }}
               </span>
-            </label>
-            <span class="unit-type-text" :class="{'unit-type-text-active': unitData[setting.key] === Object.keys(setting.options)[1]}">
-              {{ setting.options[unitData[setting.key]] }}
-            </span>
-          </div>              
-        </a>
+            </div>              
+          </a>
+        </div>
       </div>
-    </div>
+    </Transition>
     <div class="Router-view-container">
       <RouterView />
     </div>    
@@ -84,6 +90,8 @@
 <script>
   import { RouterLink, RouterView, useRoute } from 'vue-router'
   import { ref,onMounted,provide } from 'vue';  
+  import { beforeEnter,enter } from '../public/animation';
+  
   export default {
 
     setup() {
@@ -169,6 +177,8 @@
       }
     },
     methods:{
+      beforeEnter,
+      enter,
       toggleUnitWrap(){
         this.showUnitWrap = !this.showUnitWrap;
       },

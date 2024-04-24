@@ -1,7 +1,7 @@
 {
     "data":[
         {"type":["晴"],"icon_day_url":"01-0.svg","icon_night_url":"01-1.svg"},
-        {"type":["晴時多雲","晴有霾"],"icon_day_url":"02-0.svg","icon_night_url":"02-1.svg"},
+        {"type":["晴時多雲","晴有霾","晴有靄"],"icon_day_url":"02-0.svg","icon_night_url":"02-1.svg"},
         {"type":["多雲時晴"],"icon_day_url":"03-0.svg","icon_night_url":"03-1.svg"},
         {"type":["多雲","多雲有霾"],"icon_day_url":"04-0.svg","icon_night_url":"04-1.svg"},
         {"type":["多雲時陰","多雲有靄"],"icon_day_url":"05-0.svg","icon_night_url":"05-1.svg"},

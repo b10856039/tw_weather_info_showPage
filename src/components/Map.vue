@@ -1,41 +1,43 @@
 <template>
-  <div class="map-option">
-    <div class="map-toggleCounty">
-      <button @click="toggleMap(true)" :class="{ 'showCity-class': showCity }">縣市地圖</button>
-      <button  @click="toggleMap(false)" :class="{ 'showCity-class': !showCity }">鄉鎮地圖</button>
+  <Transition  @beforeEnter="beforeEnter" @enter="enter"  appear>
+    <div class="map-option">
+      <div class="map-toggleCounty">
+        <button @click="toggleMap(true)" :class="{ 'showCity-class': showCity }">縣市地圖</button>
+        <button  @click="toggleMap(false)" :class="{ 'showCity-class': !showCity }">鄉鎮地圖</button>
+      </div>
+      <div class="map-selection">
+        <div class="city-input"> 
+          <select id="searchCityInput" v-model="cityName" @change="generatorTownSelecter"></select>
+        </div>
+        <div class="town-input" v-if="!showCity">
+          <select id="searchTownInput" v-model="townName"></select>
+        </div>
+      </div> 
+      <div class="submit-selection">
+        <div class="select-btn">
+          <button id="search_target" @click="searchingMap()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
+        </div>
+        <div class="locate-btn">
+          <button @click="getUserCoordinates()"><font-awesome-icon class="location_dot" :icon="['fas', 'location-dot']" /></button>
+        </div>
+      </div>
     </div>
-    <div class="map-selection">
-      <div class="city-input"> 
-        <select id="searchCityInput" v-model="cityName" @change="generatorTownSelecter"></select>
-      </div>
-      <div class="town-input" v-if="!showCity">
-        <select id="searchTownInput" v-model="townName"></select>
-      </div>
-    </div> 
-    <div class="submit-selection">
-      <div class="select-btn">
-        <button id="search_target" @click="searchingMap()"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
-      </div>
-      <div class="locate-btn">
-        <button @click="getUserCoordinates()"><font-awesome-icon class="location_dot" :icon="['fas', 'location-dot']" /></button>
+  </Transition>
+  <Transition  @beforeEnter="beforeEnter" @enter="enter"  appear>
+    <div class="map-canvas">
+      <svg id="svgcanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <g class="country-container" @mousewheel="zooming()">
+          <g class="counties"></g>
+        </g>
+      </svg>
+      <div id="fixedDiv">
+        <button id="zoom_in">+</button>
+        <button id="zoom_out">-</button>
+        <button id="zoom_reset">Reset</button>
       </div>
     </div>
-    <div>
+  </Transition>
 
-    </div>   
-  </div>
-  <div class="map-canvas">
-    <svg id="svgcanvas" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-      <g class="country-container" @mousewheel="zooming()">
-        <g class="counties"></g>
-      </g>
-    </svg>
-    <div id="fixedDiv">
-      <button id="zoom_in">+</button>
-      <button id="zoom_out">-</button>
-      <button id="zoom_reset">Reset</button>
-    </div>
-  </div>
 
 </template>
 
@@ -45,10 +47,12 @@
 
 
 <script>
-import { ref, onMounted, onBeforeUnmount ,watch , defineProps} from "vue";
-import Map from '../../public/mapUtil.js';
-import * as d3 from "d3";
-import { eventBus } from '../main';
+  import { ref, onMounted, onBeforeUnmount ,watch , defineProps} from "vue";
+  import Map from '../../public/mapUtil.js';
+  import * as d3 from "d3";
+  import { eventBus } from '../main';
+  import { beforeEnter, enter } from '../../public/animation.js';
+
 
 export default {
     emits:['update'],
@@ -65,7 +69,7 @@ export default {
       const weatherData = ref(null);
       const cityName = ref('')
       const townName = ref('')
-      const map = ref(null);
+      const map = ref(null);     
 
       // 初始化地圖
       const initializeMap = async () => {
@@ -110,6 +114,7 @@ export default {
 
       // 生成搜尋Selector功能
       const generateSearchSelector = async (selectorId, dataArray, defaultText, valueExtractor) => {
+
         const selector = document.querySelector(`#${selectorId}`);
         selector.innerHTML = ''; // 清空所有Option
 
@@ -153,7 +158,6 @@ export default {
       // 生成臺灣鄉鎮搜尋Selector功能
       const generatorTownSelecter = async () => {
         townName.value = '';
-
         if (!showCity.value) {
           const townArr = await loadCityTown(false);
           await generateSearchSelector('searchTownInput', townArr, '請選擇鄉鎮', item => item.name);
@@ -194,7 +198,8 @@ export default {
         //處理d3.js的mapClickHandler事件的數值變更
         document.addEventListener('mapClickFinished',async (event) => {
             cityName.value = event.detail.cityName;         
-            if(townName.value!==null){
+            if(townName.value.length>0 && !showCity){
+              console.log('a')
               await generatorCitySelecter(cityName.value);         
               await generatorTownSelecter();
               townName.value = event.detail.townName;
@@ -203,19 +208,21 @@ export default {
         });
       });
 
-      return {
+      return {        
         taiwanCounties,
         showCity,
         weatherData,
-        initializeMap,
         cityName,
         townName,
+        initializeMap,
         generatorCitySelecter,
         generatorTownSelecter,
         map
       };
     },
     methods: {
+      beforeEnter,
+      enter,
       zooming() {
         //d3.js的放大縮小功能
         this.map.setupZoom(this.showCity);

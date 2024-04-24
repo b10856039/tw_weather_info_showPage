@@ -8,8 +8,16 @@
             <button class="circleQuestionIcon">?</button>
         </Tooltip>
       </div>
-      <div class="region_container" ref="region_container" v-if="displayedData.length>0"> 
-        <div  v-for="(item, index) in displayedData" :key="item.cityName + item.townName" class="weather_block"  >
+      <TransitionGroup 
+        tag="div" 
+        class="region_container" 
+        ref="region_container" 
+        v-if="displayedData.length>0" 
+        @before-enter="beforeEnter" 
+        @enter="enter" 
+        appear
+      > 
+        <div  v-for="(item, index) in displayedData" :key="item.cityName + item.townName" :data-index="index" class="weather_block"  >
             <div class="select_block">
                 <button @click="toggleBlockContent(index,'current')">目前天氣</button>
                 <button @click="toggleBlockContent(index,'week')">一周天氣</button>
@@ -22,7 +30,7 @@
 
             </div>
         </div>        
-      </div>
+      </TransitionGroup>
       <div class="no-data" v-else>無資料</div>
     </div>
     <pagination v-if="region.length > 0" :data="region" @update-displayedData="updateDisplayedData" />
@@ -31,15 +39,12 @@
 <script>
 
     import {ref, toRefs, toRef, onMounted, watch,reactive,computed } from 'vue'
-    import {Location,WeatherAPI} from '../../public/weatherUtil.js' 
-    import weatherInfo from '../components/weatherInfo.vue';
-    import weatherChart from '../components/weatherChart.vue';
-    import weatherTable from '../components/weatherTable.vue';
     import pagination from '../components/pagination.vue';
     import Tooltip from '../components/toolTip.vue'
     
     import MapWeatherInfo from '../components/MapWeatherInfo.vue';
     import MapWeatherWeekInfo from '../components/MapWeatherWeekInfo.vue';
+    import { beforeEnter, enter } from '../../public/animation.js';
 
     export default{
         components:{
@@ -136,6 +141,8 @@
             }
         },
         methods:{
+            beforeEnter,
+            enter,
             toggleBlockContent(index,type){
                 const currentBlock = document.getElementById('current_block_' + index);
                 const weekBlock = document.getElementById('week_block_' + index);

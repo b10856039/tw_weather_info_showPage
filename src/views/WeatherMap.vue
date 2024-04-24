@@ -3,6 +3,7 @@
   import MapWeatherInfo from '../components/MapWeatherInfo.vue'
   import Map from '../components/Map.vue'
   import MapWeatherWeekInfo from '../components/MapWeatherWeekInfo.vue'
+  import { beforeEnter, enter } from '../../public/animation.js';
 
   export default {
     components: {
@@ -22,6 +23,10 @@
         handleWeatherDataUpdate,
       };
     },
+    methods:{
+      beforeEnter,
+      enter
+    }
   };
 </script>
 
@@ -32,9 +37,11 @@
         <div class="container-map">
           <Map @update="handleWeatherDataUpdate"/>
         </div>
-        <div class="container-info">
-          <MapWeatherInfo :data="parentWeatherData" />
-        </div>
+        <Transition  @beforeEnter="beforeEnter" @enter="enter"  appear>
+          <div class="container-info">
+            <MapWeatherInfo :data="parentWeatherData" />
+          </div>
+        </Transition>
       </div>
       <div class="secondRow">
         <div class="container-week">
