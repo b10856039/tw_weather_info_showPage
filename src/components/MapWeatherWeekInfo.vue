@@ -1,6 +1,6 @@
 
 <template>
-  <div class="WeekInfo_template" v-if="weather.location  && weather.weather && weather.weather.weatherElement">
+  <div class="WeekInfo_template" v-if="weather.location  && weather.weather && weather.weather.WeatherElement">
     
     <div class="WeekInfo_body">
         <div class="WeekInfo_header">
@@ -51,7 +51,7 @@
                 const api = ['weatherWeek']     
                 const resWeatherWeek = await WeatherAPI.fetchWeatherData(weather.location,api[0],selectAPIType.value)
                 weather.weather = await resWeatherWeek.data
-
+                
             }
           
             const selectAPIprocessed =async (type)=>{

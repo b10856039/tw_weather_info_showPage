@@ -197,8 +197,8 @@ export default {
 
         //處理d3.js的mapClickHandler事件的數值變更
         document.addEventListener('mapClickFinished',async (event) => {
-            cityName.value = event.detail.cityName;         
-            if(townName.value.length>0 && !showCity){
+            cityName.value = event.detail.cityName;  
+            if(townName.value.length>0 && !showCity.value){
               console.log('a')
               await generatorCitySelecter(cityName.value);         
               await generatorTownSelecter();

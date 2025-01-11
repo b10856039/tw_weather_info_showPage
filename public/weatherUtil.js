@@ -32,7 +32,7 @@ export class Location{
 export class WeatherAPI{
 
     //後端伺服器API
-    static _apiBaseUrl =import.meta.env.VITE_API_URL 
+    static _apiBaseUrl =import.meta.env.VITE_API_URL;
 
     static getAPIBaseUrl(){
         return WeatherAPI._apiBaseUrl
@@ -45,7 +45,7 @@ export class WeatherAPI{
             const type = location.reqestType
             let apiType = ''
             let apiUrl = ''
-    
+
             if(apiName!=='weatherCurrent'){
                 if(type){
                     apiType = 'cities'
@@ -56,8 +56,8 @@ export class WeatherAPI{
                 if(perType === undefined){
                     perType = 'Week'
                 }
-    
-                apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}/${apiType}?cityName=${city}&townName=${town}&perType=${perType}`            
+
+                apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}/${apiType}?cityName=${city}&townName=${town}&perType=${perType}`    
             }else{  
                 let queryType;            
                 if(type){
@@ -69,11 +69,11 @@ export class WeatherAPI{
                 if(location.replaceTown!=null){
                     town = location.replaceTown
                 }
-    
+                
                 apiUrl =`${WeatherAPI.getAPIBaseUrl()}/${apiName}?cityName=${city}&townName=${town}&queryType=${queryType}` 
-      
+
             }
-    
+
             const fetchData = await fetch(apiUrl)
             const response = await fetchData.json()
             return response

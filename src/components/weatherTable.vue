@@ -5,25 +5,25 @@
                 <thead>
                     <tr>
                         <th class="dateTitle">日期</th>
-                        <th v-for="element in weather.weather.weatherElement[1].time" :key="element.startTime" class="weekDate">
-                            <span>{{ filterTime(element.startTime,'date') }}</span>
+                        <th v-for="element in weather.weather.WeatherElement[1].Time" :key="element.StartTime ? element.StartTime : element.DataTime" class="weekDate">
+                            <span>{{ filterTime(element.StartTime ? element.StartTime : element.DataTime,'date') }}</span>
                             <br>
-                            <span>{{ `星期${filterTime(element.startTime,'day')}` }}</span>
+                            <span>{{ `星期${filterTime(element.StartTime ? element.StartTime : element.DataTime,'day')}` }}</span>
                         </th>
                     </tr>
                     <tr>
                         <th class="timeTitle">時間</th>
-                        <th v-for="element in weather.weather.weatherElement[1].time" :key="element.startTime" class="weekTime">
-                            {{ filterTime(element.startTime,'time') }}
+                        <th v-for="element in weather.weather.WeatherElement[1].Time" :key="element.StartTime ? element.StartTime : element.DataTime" class="weekTime">
+                            {{ filterTime(element.StartTime ? element.StartTime : element.DataTime,'time') }}
                         </th>
                     </tr>                    
                 </thead>
                 <tbody>
-                    <tr v-for="data in filteredWeatherElements" :key="data.elementName">
-                        <td class="weather-title">{{ data.description }}</td>
-                        <td v-for="(time, index) in data.time" :key="index" :class="data.elementName"> 
-                            <img v-if="data.elementName==='Wx'" :src="image[index]" :title="formatValueWithUnit(time.elementValue[0])">                            
-                            <span v-else>{{ formatValueWithUnit(time.elementValue[0]) }}</span>
+                    <tr v-for="data in filteredWeatherElements" :key="data.ElementName">
+                        <td class="weather-title">{{ data.ElementName }}</td>
+                        <td v-for="(time, index) in data.Time" :key="index" :class="data.ElementName">      
+                            <img v-if="data.ElementName==='天氣現象'" :src="image[index]" :title="formatValueWithUnit(time.ElementValue[0],data.ElementName)">       
+                            <span v-else>{{ formatValueWithUnit(time.ElementValue[0],data.ElementName) }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -31,21 +31,21 @@
         </div>  
 
         <div class="div-table-small">
-            <table id="weatherTable-small" v-for="(element,index) in weather.weather.weatherElement[1].time" :key="element.startTime" class="week-predict-weather-table-small" v-if="weather">
-                <thead @click="toggleTableExpand(element.startTime)">
+            <table id="weatherTable-small" v-for="(element,index) in weather.weather.WeatherElement[1].Time" :key="element.StartTime" class="week-predict-weather-table-small" v-if="weather">
+                <thead @click="toggleTableExpand(element.StartTime)">
                     <tr>
-                        <th>{{ `${filterTime(element.startTime,'date')}(${filterTime(element.startTime,'day')})${filterTime(element.startTime,'time')}`}}</th>
-                        <th><font-awesome-icon :icon="['fas', tableExpandStatus[element.startTime] ? 'angle-down' : 'angle-left']" /></th>
+                        <th>{{ `${filterTime(element.StartTime,'date')}(${filterTime(element.StartTime,'day')})${filterTime(element.StartTime,'time')}`}}</th>
+                        <th><font-awesome-icon :icon="['fas', tableExpandStatus[element.StartTime] ? 'angle-down' : 'angle-left']" /></th>
                     </tr>
                 </thead>
-                <tbody v-show="tableExpandStatus[element.startTime]">
+                <tbody v-show="tableExpandStatus[element.StartTime]">
                     <tr v-for="data in filteredWeatherElements" :key="data" class="weather-data-element">                    
-                        <th v-if="!Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.elementName)">{{ data.description }}</th>
-                        <td v-if="data.elementName==='Wx'">
-                            <img :src="image[index]" :title="filterTableStartTimeData(data,element.startTime)">
-                            <span>{{filterTableStartTimeData(data,element.startTime)}}</span>
+                        <th v-if="!Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.ElementName)">{{ data.description }}</th>
+                        <td v-if="data.ElementName==='天氣現象'">
+                            <img :src="image[index]" :title="filterTableStartTimeData(data,element.StartTime)">
+                            <span>{{filterTableStartTimeData(data,element.StartTime)}}</span>
                         </td>                        
-                        <td v-else>{{filterTableStartTimeData(data,element.startTime)}}</td>
+                        <td v-else>{{filterTableStartTimeData(data,element.StartTime)}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -72,8 +72,8 @@
 
             const weather = ref(null);
             const propsData = toRef(props, 'data').value;
-            const NotincludedElementNames = {'Week':["MinCI","MaxCI","WeatherDescription"],'3Hours':['PoP12h',"WeatherDescription"]}
-            const ElementNameOrders = {'Week':['Wx','T','MaxT','MinT','PoP12h','MaxAT','MinAT','Td','RH','WS','WD','UVI'],'3Hours':['WX','T','AT','Td','PoP6h','RH','CI','WS','WD']}
+            const NotincludedElementNames = {'Week':["最小舒適度指數","最大舒適度指數","天氣預報綜合描述"],'3Hours':["天氣預報綜合描述"]}
+            const ElementNameOrders = {'Week':['天氣現象','平均溫度','最高溫度','最低溫度',"12小時降雨機率",'最高體感溫度','最低體感溫度','平均露點溫度','平均相對濕度','風速','風向','紫外線指數'],'3Hours':['天氣現象','溫度','體感溫度','露點溫度','3小時降雨機率','相對濕度','舒適度指數','風速','風向']}
             const image = ref([])
             const chooseType = ref('Week')
             const tableExpandStatus =ref({})
@@ -82,11 +82,9 @@
             //更新天氣狀況圖示資料
             const updateImages = async () => {
                 image.value = []; // 清空圖片資料
-                
-                const wxData = weather.value.weather.weatherElement.find(data => data.elementName === 'Wx');
-                
-                for (const time of wxData.time) {
-                    const imageUrl = await getIconName(time.elementValue[0].value, time.startTime);
+                const wxData = weather.value.weather.WeatherElement.find(data => data.ElementName === '天氣現象');
+                for (const time of wxData.Time) {
+                    const imageUrl = await getIconName(time.ElementValue[0].Weather, time.StartTime);
                     image.value.push(imageUrl);
                 }
             };
@@ -184,19 +182,38 @@
                 }
             },
             //數值單位設置
-            formatValueWithUnit(element){
-                if (element && element.value!=" ") {
-                    let value = element.value || '';
+            formatValueWithUnit(element,ElementName){
+                
+                if (element && element!=" ") {
+
+                    let value = '';
+                    
+                    if(ElementName == '紫外線指數'){
+                        value = Object.values(element)[1];
+                        if(value == " "){
+                            return '-'
+                        }
+                    }else{
+                        value = Object.values(element)[0];
+                    }
+
                     const storedUnitData = localStorage.getItem('unit');
                     let unitData = JSON.parse(storedUnitData);
                   
                     let measures;
-                    switch(element.measures){
-                        case '百分比':
-                            measures = '%'
+                    switch(ElementName){
+                        case "12小時降雨機率":
+                        case '平均相對濕度':
+                        case '3小時降雨機率':
+                        case '相對濕度':
+                            console.log()
+                            if(Object.values(element)[0]!= '-')
+                            {
+                                measures = '%';
+                            }
                             break
-                        case '公尺/秒':
-                            if(unitData.temperature === 'kmh'){
+                        case '風速':
+                            if(unitData.windSpeed === 'kmh'){
                                 measures = 'km/h'
                                 value = Math.round((Number(value) * 3.6)* 10)/10
                             }else{
@@ -204,7 +221,15 @@
                             }
                             
                             break
-                        case '攝氏度' :
+                        case '平均溫度':
+                        case '最高溫度':
+                        case '最低溫度':
+                        case '最高體感溫度':
+                        case '最低體感溫度':
+                        case '平均露點溫度':
+                        case '溫度':
+                        case '體感溫度':
+                        case '露點溫度':
                             if(unitData.temperature === 'fahrenheit'){
                                 measures = '\u2109'
                                 value = Math.round((Number(value) * 9 / 5 + 32))
@@ -220,14 +245,14 @@
             },        
             //處理時間對應的資料(手機板表格)
             filterTableStartTimeData(data,filterTime){
-                let newData = data.time.filter((item)=>{                    
+                let newData = data.Time.filter((item)=>{                    
 
-                    const st_Time = new Date(item.startTime ? item.startTime : item.dataTime)
+                    const st_Time = new Date(item.StartTime ? item.StartTime : item.dataTime)
                     const fil_Time = new Date(filterTime)
                     return st_Time.getTime() === fil_Time.getTime()
                 })
                 if(newData.length>0){
-                    return this.formatValueWithUnit(newData[0].elementValue[0])
+                    return this.formatValueWithUnit(newData[0].ElementValue[0],data.ElementName)
                 }                            
             },            
             toggleTableExpand(startTime) {
@@ -237,10 +262,10 @@
         computed: {
             //處理處理時間對應的資料(大表格)
             filteredWeatherElements() {
-                return this.weather.weather.weatherElement.filter(data =>
-                    !Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.elementName)
+                return this.weather.weather.WeatherElement.filter(data =>
+                    !Object.values(this.NotincludedElementNames[this.chooseType]).includes(data.ElementName)
                 ).sort((a,b)=>{
-                    return this.ElementNameOrders[this.chooseType].indexOf(a.elementName)  - this.ElementNameOrders[this.chooseType].indexOf(b.elementName) 
+                    return this.ElementNameOrders[this.chooseType].indexOf(a.ElementName)  - this.ElementNameOrders[this.chooseType].indexOf(b.ElementName) 
                 });
             }
         }

@@ -40,7 +40,7 @@ export default {
         const checkUpdateUnit = inject('unpdateUnit')
 
         const chartTypes = [
-            { type: '3Hours_Temp', label: '逐三小時\n預報'},
+            // { type: '3Hours_Temp', label: '逐三小時\n預報'},
             { type: 'Week_temp', label: '一週溫度\n曲線' },
             { type: 'Week_feelTemp', label: '一週體感溫度\n曲線' },            
         ];
@@ -62,17 +62,17 @@ export default {
             let processData = []
             data.forEach(item => {
                 // 提取 startTime                        
-                const startTime = new Date(item.startTime);
+                const startTime = new Date(item.StartTime);
                 const startHour = startTime.getHours();
                 if(type === 'High'){
                     if (startHour >= 6 && startHour<18) {
-                        processData.push(item.elementValue[0].value);
+                        processData.push(Object.values(item.ElementValue[0])[0]);
                     } else {
                         processData.push(null);
                     }
                 }else{
                     if (startHour >= 18 || startHour<6) {
-                        processData.push(item.elementValue[0].value);
+                        processData.push(Object.values(item.ElementValue[0])[0]);
                     } else {
                         processData.push(null);
                     }
@@ -112,11 +112,12 @@ export default {
 
             //處理Data Value
             const processData = (HighData, LowData,filter) => {    
+
                 if(selectChart.value === '3Hours_Temp'){
                     processedDates = {}
-                    timeLabels = HighData.map(item => item.dataTime).map(formatTimeString); 
+                    timeLabels = HighData.map(item => item.DataTime).map(formatTimeString); 
                 }else{
-                    timeLabels = HighData.map(item => item.startTime).map(formatTimeString); 
+                    timeLabels = HighData.map(item => item.StartTime).map(formatTimeString); 
                 }
                                    
 
@@ -124,8 +125,8 @@ export default {
                     HighValues = filterTimeData(HighData,'High');
                     LowValues = filterTimeData(LowData,'Low');
                 }else{
-                    HighValues = HighData.map(item => item.elementValue[0].value),'High';
-                    LowValues = LowData.map(item => item.elementValue[0].value),'Low';
+                    HighValues = HighData.map(item => Object.values(item.ElementValue[0])[0]),'High';
+                    LowValues = LowData.map(item => Object.values(item.ElementValue[0])[0]),'Low';
                 }
 
                 HighValues = HighValues.map((item)=>{
@@ -177,24 +178,22 @@ export default {
                 yAxisTitle = '\u2109'
             }
 
-
             if (type === 'Week_temp') {
-                const HighData = data.weather.weatherElement.find(item => item.elementName === 'MaxT').time;
-                const LowData = data.weather.weatherElement.find(item => item.elementName === 'MinT').time;
+                const HighData = data.weather.WeatherElement.find(item => item.ElementName === "最高溫度").Time;
+                const LowData = data.weather.WeatherElement.find(item => item.ElementName === "最低溫度").Time;
                 processData(HighData, LowData,true);
                 dataSets = setDatasets('高溫', '低溫', 'rgb(246, 180, 4)', 'rgb(18, 180, 220)');
 
                 let fitlerNullHighValues = HighValues.filter(value => value !== null)
                 let fitlerNullLowValues = LowValues.filter(value => value !== null)
-
                 newYmax = Math.max(...fitlerNullHighValues)+(5-(Math.max(...fitlerNullHighValues)%5))
                 newYmin = Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 >=0 ? Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 : 0
 
                 yAxisTitle = `溫度(${yAxisTitle})`
 
             } else if (type === 'Week_feelTemp') {
-                const HighData = data.weather.weatherElement.find(item => item.elementName === 'MaxAT').time;
-                const LowData = data.weather.weatherElement.find(item => item.elementName === 'MinAT').time;
+                const HighData = data.weather.WeatherElement.find(item => item.ElementName === "最高體感溫度").Time;
+                const LowData = data.weather.WeatherElement.find(item => item.ElementName === "最低體感溫度").Time;
                 processData(HighData, LowData,true);
                 dataSets = setDatasets('體感高溫', '體感低溫', 'rgb(246, 180, 4)', 'rgb(18, 180, 220)');
 
@@ -205,8 +204,9 @@ export default {
                 newYmin = Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 >=0 ? Math.min(...fitlerNullLowValues)-(Math.min(...fitlerNullLowValues)%5)-5 : 0
                 yAxisTitle = `體感溫度(${yAxisTitle})`
             } else if (type === '3Hours_Temp') {
-                const HighData = data.weather.weatherElement.find(item => item.elementName === 'T').time;
-                const LowData = data.weather.weatherElement.find(item => item.elementName === 'AT').time;
+                console.log(data.weather.WeatherElement)
+                const HighData = data.weather.WeatherElement.find(item => item.ElementName === '溫度').Time;
+                const LowData = data.weather.WeatherElement.find(item => item.ElementName === '體感溫度').Time;
                 processData(HighData,LowData,false); // LowData not used for humidity
                 dataSets = setDatasets('溫度', '體感溫度', 'rgb(205, 205, 205)', 'rgb(246, 180, 4)');
                 newYmax = Math.max(...HighValues)+(10-(Math.max(...HighValues)%5))
